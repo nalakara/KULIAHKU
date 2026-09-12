@@ -67,19 +67,20 @@ IndexedDB 'app_data'                IndexedDB 'asset_store'
 ```
 
 ### Key Principles:
-1. **Asset Store (`assetStore.ts`)**:
+1. **Asset Store (`assetStore.ts` & `src/components/AssetImage.tsx`)**:
    - Uploaded files are converted to native `Blob` objects and stored in the `asset_store` object store.
-   - Tasks and portfolio items store a lightweight key (`asset:asset_<timestamp>_<hash>`) or external URL.
-   - The `<AssetImage />` component and `useAssetUrl()` hook automatically resolve asset keys into temporary, memory-safe `blob:` Object URLs.
+   - Tasks, portfolio items, and user profile store a lightweight key (`asset:asset_<timestamp>_<hash>`) or external URL.
+   - The `<AssetImage />` component ([src/components/AssetImage.tsx](file:///Users/yudhan/Documents/FRAMEWORKS/KULIAHKU/src/components/AssetImage.tsx)) and `useAssetUrl()` hook automatically resolve asset keys into temporary, memory-safe `blob:` Object URLs.
+   - **Asset Garbage Collection**: `collectReferencedAssetIds()` scans active tasks, portfolio, and profile. `pruneOrphanedAssets()` safely purges unreferenced blobs from IndexedDB. Data safety is strictly preserved: no asset is ever deleted if it is referenced by any active record.
 2. **Instant Hydration**:
-   - Tiny structured JSON is cached for instant first-frame render, while IndexedDB acts as the true source of persistence.
+   - Structured data is cached for instant first-frame render, while IndexedDB acts as the true source of persistence.
 3. **Migration Strategy (`migration.ts`)**:
    - Automatically detects legacy `localStorage` keys (`dkv_*_v1`).
    - Extracts existing Base64 strings, converts them into Blobs in `asset_store`, and replaces them with `asset:` keys.
    - Sets `kuliahku_migrated_v1 = 'true'` and safely purges legacy Base64 from `localStorage`.
 4. **Portable Offline Backup**:
-   - `exportBackupData()` bundles all structured records and serializes stored Blobs into a single, complete JSON file.
-   - The backup can be restored on any other device/browser completely offline.
+   - `exportBackupData()` bundles all structured records and serializes currently referenced Blobs into a single, complete JSON file.
+   - The backup can be restored on any other device/browser completely offline without bloating historical orphaned images.
 
 ---
 
