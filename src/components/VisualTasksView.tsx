@@ -20,6 +20,7 @@ import confetti from 'canvas-confetti';
 import { VisualTask, VisualStage, PriorityLevel, DeliverableType } from '../types';
 import { VISUAL_STAGES as STAGES, calculateDeadlineUrgency, filterTasks } from '../domain/tasks';
 import { playChime } from '../utils/audioAlert';
+import { AssetImage } from '../infrastructure/storage/assetStore';
 
 interface VisualTasksViewProps {
   tasks: VisualTask[];
@@ -188,11 +189,10 @@ export const VisualTasksView: React.FC<VisualTasksViewProps> = ({
                   <div className="relative h-44 w-full bg-slate-950 overflow-hidden">
                     {task.moodboardImages && task.moodboardImages.length > 0 ? (
                       <div className="relative w-full h-full">
-                        <img
+                        <AssetImage
                           src={task.moodboardImages[0]}
                           alt={task.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                          referrerPolicy="no-referrer"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30" />
                       </div>
@@ -348,11 +348,10 @@ export const VisualTasksView: React.FC<VisualTasksViewProps> = ({
                     >
                       {t.moodboardImages?.[0] && (
                         <div className="h-20 w-full mb-2 rounded-lg overflow-hidden bg-slate-950">
-                          <img
+                          <AssetImage
                             src={t.moodboardImages[0]}
                             alt={t.title}
                             className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
                           />
                         </div>
                       )}

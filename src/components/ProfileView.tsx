@@ -41,6 +41,7 @@ import {
 } from '../types';
 import { calculateTotalSks } from '../domain/academic';
 import { calculateTaskStatistics } from '../domain/tasks';
+import { AssetImage } from '../infrastructure/storage/assetStore';
 import { EditProfileModal } from './EditProfileModal';
 
 interface ProfileViewProps {
@@ -187,11 +188,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             {/* Avatar with creative ring */}
             <div className="relative group flex-shrink-0">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-xl">
-                <img
+                <AssetImage
                   src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'}
                   alt={profile.fullName}
                   className="w-full h-full rounded-[14px] object-cover bg-slate-800"
-                  referrerPolicy="no-referrer"
                 />
               </div>
               <button

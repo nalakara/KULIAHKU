@@ -18,13 +18,13 @@ import {
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 import { UserSettings, NotificationItem, UserProfile } from '../types';
+import { AssetImage } from '../infrastructure/storage/assetStore';
 
 interface HeaderProps {
   settings: UserSettings;
   onUpdateSettings: (newSettings: Partial<UserSettings>) => void;
   onOpenSyncModal: () => void;
   onOpenEstimationModal: () => void;
-  isSyncing: boolean;
   notifications: NotificationItem[];
   onClearNotification: (id: string) => void;
   onRequestNotificationPermission: () => void;
@@ -41,7 +41,6 @@ export const Header: React.FC<HeaderProps> = ({
   onUpdateSettings,
   onOpenSyncModal,
   onOpenEstimationModal,
-  isSyncing,
   notifications,
   onClearNotification,
   onRequestNotificationPermission,
@@ -126,33 +125,15 @@ export const Header: React.FC<HeaderProps> = ({
             <span>Estimasi Waktu</span>
           </button>
 
-          {/* Cloud Sync Quick Status */}
+          {/* Storage & Backup Status Button */}
           <button
             id="quick-cloud-sync-btn"
             onClick={onOpenSyncModal}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-              settings.googleDriveConnected
-                ? 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700'
-                : 'bg-amber-900/30 text-amber-300 border-amber-800/50 hover:bg-amber-900/50'
-            }`}
-            title="Pengaturan Sinkronisasi Google Drive"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700"
+            title="Cadangan Data & Pengingat (IndexedDB Offline-First)"
           >
-            {isSyncing ? (
-              <>
-                <Cloud className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
-                <span className="hidden sm:inline">Sinkronisasi...</span>
-              </>
-            ) : settings.googleDriveConnected ? (
-              <>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="hidden sm:inline">Google Drive Aktif</span>
-              </>
-            ) : (
-              <>
-                <Cloud className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden sm:inline">Sinkron Awan</span>
-              </>
-            )}
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="hidden sm:inline">Offline Ready</span>
           </button>
 
           {/* PWA Install Button */}
@@ -257,11 +238,10 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-indigo-500/50 transition group"
               title="Buka Profil Mahasiswa & RPS"
             >
-              <img
+              <AssetImage
                 src={profile.avatarUrl}
                 alt={profile.fullName}
                 className="w-7 h-7 rounded-lg object-cover ring-1 ring-indigo-500/50 group-hover:ring-indigo-400 transition"
-                referrerPolicy="no-referrer"
               />
               <div className="hidden lg:block text-left text-[11px] leading-tight max-w-[100px] truncate">
                 <span className="font-semibold text-white truncate block">{profile.fullName.split(' ')[0]}</span>

@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { 
-  Cloud, 
-  CloudCheck, 
-  RefreshCw, 
   Download, 
   Upload, 
   Bell, 
   Volume2, 
   ShieldCheck, 
-  Mail, 
   Check, 
   X, 
   AlertCircle,
   FileJson,
-  Smartphone
+  HardDrive,
+  Clock
 } from 'lucide-react';
 import { UserSettings, CourseSchedule, VisualTask, PortfolioItem, StudySession, UserProfile, CourseRPS } from '../types';
 import { exportBackupData, triggerDownloadBackup, AppDataBackup } from '../utils/storage';
@@ -31,8 +28,6 @@ interface CloudSyncModalProps {
   profile?: UserProfile;
   rps?: CourseRPS[];
   onRestoreBackup: (backup: AppDataBackup) => void;
-  onManualSync: () => Promise<void>;
-  isSyncing: boolean;
   onRequestNotificationPermission: () => void;
   onSendTestNotification: () => void;
 }
@@ -49,21 +44,26 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
   profile,
   rps,
   onRestoreBackup,
-  onManualSync,
-  isSyncing,
   onRequestNotificationPermission,
   onSendTestNotification,
 }) => {
-  const [googleEmailInput, setGoogleEmailInput] = useState(settings.googleAccountEmail || 'nalakara.id@gmail.com');
   const [restoreSuccess, setRestoreSuccess] = useState(false);
   const [restoreError, setRestoreError] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleDownloadBackup = () => {
-    const backup = exportBackupData(courses, tasks, portfolio, sessions, settings, profile, rps);
-    triggerDownloadBackup(backup);
-    playChime('notification');
+  const handleDownloadBackup = async () => {
+    try {
+      setIsExporting(true);
+      const backup = await exportBackupData(courses, tasks, portfolio, sessions, settings, profile, rps);
+      triggerDownloadBackup(backup);
+      playChime('notification');
+    } catch {
+      setRestoreError('Gagal menyiapkan berkas cadangan.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,11 +97,11 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-              <Cloud className="w-4 h-4" />
+              <HardDrive className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Sinkronisasi Awan & Pengingat</h3>
-              <p className="text-xs text-slate-400">Google Drive Cloud Backup & Notifikasi Produktivitas</p>
+              <h3 className="text-base font-bold text-white">Cadangan Data & Pengingat</h3>
+              <p className="text-xs text-slate-400">Penyimpanan Mandiri Offline-First & Pengaturan Notifikasi</p>
             </div>
           </div>
           <button
@@ -114,74 +114,28 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
 
         {/* Modal Content */}
         <div className="p-6 overflow-y-auto space-y-6 text-xs text-slate-300">
-          {/* Google Drive Automatic Sync Section */}
-          <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CloudCheck className="w-5 h-5 text-emerald-400" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Sinkronisasi Google Drive</h4>
-                  <p className="text-[11px] text-slate-400">
-                    Otomatis mencadangkan jadwal, tugas visual, dan portofolio ke Google Drive
-                  </p>
+          {/* Local-First Architecture Info */}
+          <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 shrink-0 mt-0.5">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-white">Penyimpanan Lokal Mandiri (Local-First)</h4>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Aktif & Aman
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Seluruh jadwal kuliah, tugas visual, aset moodboard, dan karya portofolio Anda disimpan langsung di browser perangkat ini melalui <strong>IndexedDB & Blob Storage</strong>. Aplikasi dapat digunakan sepenuhnya tanpa koneksi internet.
+                </p>
+                <div className="pt-2 text-[11px] text-slate-500 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Sinkronisasi otomatis ke awan multi-perangkat direncanakan untuk pembaruan berikutnya.</span>
                 </div>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={settings.googleDriveConnected}
-                  onChange={(e) => onUpdateSettings({ googleDriveConnected: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-              </label>
             </div>
-
-            {settings.googleDriveConnected && (
-              <div className="pt-3 border-t border-slate-700/80 space-y-3">
-                <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">
-                    Akun Google Drive Tersambung:
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div className="relative flex-1">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                      <input
-                        type="email"
-                        value={googleEmailInput}
-                        onChange={(e) => setGoogleEmailInput(e.target.value)}
-                        onBlur={() => onUpdateSettings({ googleAccountEmail: googleEmailInput })}
-                        placeholder="email@gmail.com"
-                        className="w-full rounded-xl bg-slate-900 border border-slate-700 text-xs text-white pl-9 pr-3 py-2 focus:outline-none focus:border-indigo-500"
-                      />
-                    </div>
-                    <button
-                      onClick={onManualSync}
-                      disabled={isSyncing}
-                      className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold flex items-center gap-1.5 transition active:scale-95"
-                    >
-                      <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-                      <span>{isSyncing ? 'Sinkron...' : 'Sinkron Sekarang'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                    Penyimpanan Terenkripsi & Sangat Ringan (~32 KB)
-                  </span>
-                  <span>
-                    Sinkron terakhir:{' '}
-                    <strong className="text-slate-200">
-                      {settings.lastCloudSync
-                        ? new Date(settings.lastCloudSync).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-                        : 'Baru saja'}
-                    </strong>
-                  </span>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Customizable Notifications Section */}
@@ -200,7 +154,11 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                 <input
                   type="checkbox"
                   checked={settings.browserNotifications}
-                  onChange={(e) => onUpdateSettings({ browserNotifications: e.target.checked })}
+                  onChange={(e) => {
+                    const next = e.target.checked;
+                    onUpdateSettings({ browserNotifications: next });
+                    if (next) onRequestNotificationPermission();
+                  }}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
@@ -263,23 +221,24 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
             </div>
           </div>
 
-          {/* Manual JSON File Backup & Restore (Zero Data Loss) */}
+          {/* Manual JSON File Backup & Restore */}
           <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-3">
             <h4 className="text-sm font-bold text-white flex items-center gap-2">
               <FileJson className="w-4 h-4 text-amber-400" />
-              Cadangan Berkas Manual (Ekspor / Impor JSON)
+              Cadangan Berkas Mandiri (Ekspor / Impor JSON)
             </h4>
             <p className="text-[11px] text-slate-400">
-              Unduh cadangan data Anda secara offline atau pulihkan data dari file backup JSON sebelumnya.
+              Unduh salinan lengkap seluruh jadwal, tugas, dan portofolio ke dalam file JSON mandiri untuk disimpan di komputer atau dipindahkan ke perangkat lain.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
                 onClick={handleDownloadBackup}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-semibold transition"
+                disabled={isExporting}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 border border-slate-700 text-white font-semibold transition"
               >
                 <Download className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Unduh Cadangan (.json)</span>
+                <span>{isExporting ? 'Menyiapkan...' : 'Unduh Cadangan (.json)'}</span>
               </button>
 
               <label className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-semibold transition cursor-pointer">

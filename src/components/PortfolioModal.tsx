@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Image as ImageIcon, Upload, Tag } from 'lucide-react';
 import { PortfolioItem, DeliverableType } from '../types';
+import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
 
 interface PortfolioModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (item: PortfolioItem) => void;
   itemToEdit?: PortfolioItem | null;
-  initialFromTask?: {
-    taskId: string;
-    title: string;
-    category: DeliverableType;
-    courseName: string;
-    description: string;
-    imageUrl?: string;
-  } | null;
+  initialFromTask?: any;
 }
 
 const CATEGORIES: DeliverableType[] = [
@@ -34,9 +28,9 @@ const SOFTWARE_LIST = [
   'Figma',
   'After Effects',
   'Blender',
-  'InDesign',
   'Procreate',
-  'Premiere Pro',
+  'InDesign',
+  'Premiere',
 ];
 
 export const PortfolioModal: React.FC<PortfolioModalProps> = ({
@@ -47,12 +41,12 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
   initialFromTask,
 }) => {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<DeliverableType>('Branding & Identitas');
+  const [category, setCategory] = useState<DeliverableType>('Poster & Cetak');
   const [courseOrClient, setCourseOrClient] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [selectedSoftware, setSelectedSoftware] = useState<string[]>(['Illustrator', 'Photoshop']);
-  const [tagsInput, setTagsInput] = useState('Branding, Packaging, Visual');
+  const [selectedSoftware, setSelectedSoftware] = useState<string[]>(['Illustrator']);
+  const [tagsInput, setTagsInput] = useState('');
   const [behanceUrl, setBehanceUrl] = useState('');
   const [featured, setFeatured] = useState(false);
 
@@ -63,20 +57,20 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
       setCourseOrClient(itemToEdit.courseOrClient);
       setDescription(itemToEdit.description);
       setImageUrl(itemToEdit.imageUrl);
-      setSelectedSoftware(itemToEdit.softwareUsed || []);
+      setSelectedSoftware(itemToEdit.softwareUsed || ['Illustrator']);
       setTagsInput(itemToEdit.tags?.join(', ') || '');
       setBehanceUrl(itemToEdit.behanceUrl || '');
       setFeatured(itemToEdit.featured || false);
     } else if (initialFromTask) {
-      setTitle(initialFromTask.title);
-      setCategory(initialFromTask.category);
-      setCourseOrClient(initialFromTask.courseName);
-      setDescription(initialFromTask.description);
+      setTitle(initialFromTask.title || '');
+      setCategory(initialFromTask.category || 'Poster & Cetak');
+      setCourseOrClient(initialFromTask.courseName || 'Studio Desain');
+      setDescription(initialFromTask.description || '');
       setImageUrl(initialFromTask.imageUrl || 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80');
       setSelectedSoftware(['Illustrator', 'Photoshop']);
-      setTagsInput('Studio DKV, Tugas Selesai');
+      setTagsInput(initialFromTask.category || 'Visual Design');
       setBehanceUrl('');
-      setFeatured(true);
+      setFeatured(false);
     } else {
       setTitle('');
       setCategory('Poster & Cetak');
@@ -100,16 +94,21 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const res = event.target?.result as string;
-      if (res) setImageUrl(res);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const assetKey = await saveAssetBlob(file);
+      setImageUrl(assetKey);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const res = event.target?.result as string;
+        if (res) setImageUrl(res);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -217,11 +216,10 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
             </div>
             {imageUrl && (
               <div className="mt-2 h-32 rounded-xl overflow-hidden border border-slate-700 bg-black">
-                <img
+                <AssetImage
                   src={imageUrl}
                   alt="preview"
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
               </div>
             )}

@@ -15,6 +15,7 @@ import {
 import { PortfolioItem, DeliverableType } from '../types';
 import { filterPortfolio } from '../domain/portfolio';
 import { DELIVERABLES } from '../domain/tasks';
+import { AssetImage } from '../infrastructure/storage/assetStore';
 
 interface PortfolioViewProps {
   items: PortfolioItem[];
@@ -112,11 +113,10 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                   onClick={() => setPreviewItem(item)}
                   className="relative h-56 w-full bg-slate-950 overflow-hidden cursor-pointer"
                 >
-                  <img
+                  <AssetImage
                     src={item.imageUrl}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 opacity-80" />
 
@@ -228,11 +228,10 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
             <div className="overflow-y-auto flex-1 p-5 space-y-4">
               <div className="rounded-xl overflow-hidden bg-black max-h-[50vh] flex items-center justify-center">
-                <img
+                <AssetImage
                   src={previewItem.imageUrl}
                   alt={previewItem.title}
                   className="max-h-[50vh] w-auto object-contain"
-                  referrerPolicy="no-referrer"
                 />
               </div>
 

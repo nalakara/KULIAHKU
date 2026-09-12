@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { ActiveTab } from './Navigation';
 import { UserProfile, UserSettings } from '../types';
+import { AssetImage } from '../infrastructure/storage/assetStore';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -300,11 +301,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
               title="Buka Profil Mahasiswa & RPS"
             >
-              <img
+              <AssetImage
                 src={profile.avatarUrl}
                 alt={profile.fullName}
                 className="w-8 h-8 rounded-xl object-cover ring-1 ring-indigo-500/40 group-hover:ring-indigo-400 transition flex-shrink-0"
-                referrerPolicy="no-referrer"
               />
               <div className={`min-w-0 flex-1 ${isCollapsedDesktop ? 'lg:hidden' : 'block'}`}>
                 <span className="text-xs font-semibold text-white block truncate">

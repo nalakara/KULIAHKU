@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2, Image as ImageIcon, Palette, Calendar, Clock, Upload } from 'lucide-react';
 import { VisualTask, VisualStage, PriorityLevel, DeliverableType, CourseSchedule } from '../types';
+import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -98,18 +99,23 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     setImageUrlInput('');
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
-      if (result) {
-        setMoodboardImages([...moodboardImages, result]);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const assetKey = await saveAssetBlob(file);
+      setMoodboardImages(prev => [...prev, assetKey]);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        if (result) {
+          setMoodboardImages(prev => [...prev, result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleRemoveImage = (idx: number) => {
@@ -375,11 +381,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-2">
                 {moodboardImages.map((img, idx) => (
                   <div key={idx} className="relative h-20 rounded-lg overflow-hidden border border-slate-700 bg-black group">
-                    <img
+                    <AssetImage
                       src={img}
                       alt="moodboard"
                       className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
                     />
                     <button
                       type="button"

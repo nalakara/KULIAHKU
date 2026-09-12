@@ -16,6 +16,7 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -104,19 +105,27 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setFormData(prev => ({
-            ...prev,
-            avatarUrl: event.target!.result as string,
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
+      try {
+        const assetKey = await saveAssetBlob(file);
+        setFormData(prev => ({
+          ...prev,
+          avatarUrl: assetKey,
+        }));
+      } catch {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            setFormData(prev => ({
+              ...prev,
+              avatarUrl: event.target!.result as string,
+            }));
+          }
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -160,11 +169,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             </label>
             <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-xl bg-slate-800/40 border border-slate-800">
               <div className="relative group">
-                <img
+                <AssetImage
                   src={formData.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
                   alt={formData.fullName}
                   className="w-20 h-20 rounded-2xl object-cover border-2 border-indigo-500/50 shadow-md"
-                  referrerPolicy="no-referrer"
                 />
                 <label 
                   htmlFor="avatar-file-input"

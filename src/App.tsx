@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { ActiveTab } from './components/Navigation';
@@ -44,12 +44,19 @@ import {
   saveProfile,
   loadRPS,
   saveRPS,
+  initializeAndMigrateStorage,
+  restoreBackupData,
   AppDataBackup,
 } from './utils/storage';
 
 import { playChime } from './utils/audioAlert';
 import { createTaskFromRPSMeeting, taskToPortfolioDraft } from './domain/tasks';
-import { createNotification, dispatchBrowserNotification } from './domain/notifications';
+import { 
+  createNotification, 
+  dispatchBrowserNotification,
+  checkUpcomingCourseAlerts,
+  checkUrgentTaskAlerts 
+} from './domain/notifications';
 
 export default function App() {
   // Application Data States
@@ -99,15 +106,12 @@ export default function App() {
     settings: 'Sync & Opsi',
   };
 
-  // Cloud Sync Simulation State
-  const [isSyncing, setIsSyncing] = useState(false);
-
   // In-App Notification Feed
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
       id: 'notif-1',
       title: 'Studio Kuliah DKV Siap',
-      message: 'Jadwal dan pengingat tugas visual aktif dengan sinkronisasi Google Drive.',
+      message: 'Jadwal dan pengingat tugas visual aktif dengan penyimpanan lokal mandiri (IndexedDB).',
       type: 'system',
       timestamp: new Date().toISOString(),
       isRead: false,
@@ -164,19 +168,65 @@ export default function App() {
     }
   }, [settings]);
 
-  // Automatic Google Drive Cloud Sync debounce
+  // Initial mount: hydrate from IndexedDB and run migration if needed
   useEffect(() => {
-    if (!settings.autoCloudSync || !settings.googleDriveConnected) return;
+    initializeAndMigrateStorage().then(migrated => {
+      setCourses(migrated.courses);
+      setTasks(migrated.tasks);
+      setPortfolio(migrated.portfolio);
+      setSessions(migrated.sessions);
+      setSettings(migrated.settings);
+      setProfile(migrated.profile);
+      setRpsList(migrated.rps);
+    });
+  }, []);
 
-    const timer = setTimeout(() => {
-      setSettings(prev => ({
-        ...prev,
-        lastCloudSync: new Date().toISOString(),
-      }));
-    }, 1500);
+  // Proactive periodic notification check for upcoming classes and urgent deadlines
+  const notifiedAlertsRef = useRef<Set<string>>(new Set());
 
-    return () => clearTimeout(timer);
-  }, [courses, tasks, portfolio, sessions, settings.autoCloudSync, settings.googleDriveConnected]);
+  useEffect(() => {
+    if (!settings.browserNotifications) return;
+
+    const runAlertCheck = () => {
+      // 1. Check upcoming courses
+      const courseAlerts = checkUpcomingCourseAlerts(courses, settings.courseAlertMinutes);
+      courseAlerts.forEach(({ course, minutesUntil }) => {
+        const alertKey = `course-${course.id}-${new Date().toDateString()}`;
+        if (!notifiedAlertsRef.current.has(alertKey)) {
+          notifiedAlertsRef.current.add(alertKey);
+          const notif = createNotification(
+            `Kelas ${course.courseName} Akan Dimulai!`,
+            `Kuliah di ${course.room} (${course.studioType}) dimulai dalam ${minutesUntil} menit.`,
+            'course'
+          );
+          setNotifications(prev => [notif, ...prev]);
+          if (settings.soundAlerts) playChime('notification');
+          dispatchBrowserNotification(notif.title, notif.message);
+        }
+      });
+
+      // 2. Check urgent tasks
+      const taskAlerts = checkUrgentTaskAlerts(tasks, settings.taskAlertHours);
+      taskAlerts.forEach(({ task, hoursUntil }) => {
+        const alertKey = `task-${task.id}-${new Date().toDateString()}`;
+        if (!notifiedAlertsRef.current.has(alertKey)) {
+          notifiedAlertsRef.current.add(alertKey);
+          const notif = createNotification(
+            `Tenggat Tugas Visual Dekat!`,
+            `"${task.title}" (${task.courseName}) tersisa ${hoursUntil} jam lagi.`,
+            'task'
+          );
+          setNotifications(prev => [notif, ...prev]);
+          if (settings.soundAlerts) playChime('notification');
+          dispatchBrowserNotification(notif.title, notif.message);
+        }
+      });
+    };
+
+    runAlertCheck();
+    const interval = setInterval(runAlertCheck, 60000);
+    return () => clearInterval(interval);
+  }, [courses, tasks, settings.browserNotifications, settings.courseAlertMinutes, settings.taskAlertHours, settings.soundAlerts]);
 
   // Request browser notification permission
   const handleRequestNotificationPermission = async () => {
@@ -213,33 +263,9 @@ export default function App() {
     }
   };
 
-  // Manual Google Drive Sync
-  const handleManualSync = async () => {
-    setIsSyncing(true);
-    // Simulate real cloud sync handshake
-    await new Promise(r => setTimeout(r, 1200));
-    setSettings(prev => ({
-      ...prev,
-      lastCloudSync: new Date().toISOString(),
-    }));
-    setIsSyncing(false);
-    playChime('notification');
-
-    setNotifications(prev => [
-      {
-        id: `sync-${Date.now()}`,
-        title: 'Sinkronisasi Google Drive Selesai',
-        message: 'Seluruh berkas jadwal kuliah, tugas, dan portofolio berhasil disimpan ke awan.',
-        type: 'sync',
-        timestamp: new Date().toISOString(),
-        isRead: false,
-      },
-      ...prev,
-    ]);
-  };
-
   // Restore backup
-  const handleRestoreBackup = (backup: AppDataBackup) => {
+  const handleRestoreBackup = async (backup: AppDataBackup) => {
+    await restoreBackupData(backup);
     if (backup.courses) setCourses(backup.courses);
     if (backup.tasks) setTasks(backup.tasks);
     if (backup.portfolio) setPortfolio(backup.portfolio);
@@ -419,7 +445,6 @@ export default function App() {
           onUpdateSettings={(upd) => setSettings(prev => ({ ...prev, ...upd }))}
           onOpenSyncModal={() => setIsSyncModalOpen(true)}
           onOpenEstimationModal={() => setIsEstimationModalOpen(true)}
-          isSyncing={isSyncing}
           notifications={notifications}
           onClearNotification={(id) => setNotifications(prev => prev.filter(n => n.id !== id))}
           onRequestNotificationPermission={handleRequestNotificationPermission}
@@ -584,8 +609,6 @@ export default function App() {
         profile={profile}
         rps={rpsList}
         onRestoreBackup={handleRestoreBackup}
-        onManualSync={handleManualSync}
-        isSyncing={isSyncing}
         onRequestNotificationPermission={handleRequestNotificationPermission}
         onSendTestNotification={handleSendTestNotification}
       />
