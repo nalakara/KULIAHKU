@@ -166,15 +166,23 @@ export function createTaskFromRPSMeeting(
   defaultDate.setHours(23, 59, 0, 0);
 
   // Match deliverable type from text if possible
-  const deliverableText = meeting.deliverable || meeting.topic;
+  const combinedContext = `${meeting.deliverable || ''} ${meeting.topic || ''} ${course.courseName}`.toLowerCase();
   let deliverableType: DeliverableType = 'Poster & Cetak';
-  if (/ui|ux|wireframe|figma/i.test(deliverableText)) deliverableType = 'UI/UX & Prototype';
-  else if (/brand|logo|identitas/i.test(deliverableText)) deliverableType = 'Branding & Identitas';
-  else if (/animasi|motion|video/i.test(deliverableText)) deliverableType = 'Animasi & Motion';
-  else if (/ilustrasi|karakter|drawing/i.test(deliverableText)) deliverableType = 'Ilustrasi & Karakter';
-  else if (/kemasan|packaging|box/i.test(deliverableText)) deliverableType = 'Kemasan / Packaging';
-  else if (/tipografi|layout|buku|editorial/i.test(deliverableText)) deliverableType = 'Tipografi & Editorial';
-  else if (/foto|video/i.test(deliverableText)) deliverableType = 'Fotografi & Video';
+  if (/ui|ux|wireframe|figma|prototipe|prototype|aplikasi|mobile|web/i.test(combinedContext)) {
+    deliverableType = 'UI/UX & Prototype';
+  } else if (/brand|logo|identitas/i.test(combinedContext)) {
+    deliverableType = 'Branding & Identitas';
+  } else if (/animasi|motion|video/i.test(combinedContext)) {
+    deliverableType = 'Animasi & Motion';
+  } else if (/ilustrasi|karakter|drawing/i.test(combinedContext)) {
+    deliverableType = 'Ilustrasi & Karakter';
+  } else if (/kemasan|packaging|box/i.test(combinedContext)) {
+    deliverableType = 'Kemasan / Packaging';
+  } else if (/tipografi|layout|buku|editorial/i.test(combinedContext)) {
+    deliverableType = 'Tipografi & Editorial';
+  } else if (/foto|fotografi/i.test(combinedContext)) {
+    deliverableType = 'Fotografi & Video';
+  }
 
   return {
     id: `task-rps-${Date.now()}`,
