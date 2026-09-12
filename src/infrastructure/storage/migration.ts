@@ -3,9 +3,9 @@ import { INITIAL_COURSES, INITIAL_TASKS, INITIAL_PORTFOLIO, INITIAL_SESSIONS, IN
 import { STORES, idbGet, idbSet } from './idb';
 import { dataUrlToBlob, saveAssetBlob } from './assetStore';
 
-const MIGRATION_FLAG = 'kuliahku_migrated_v1';
+export const MIGRATION_FLAG = 'kuliahku_migrated_v1';
 
-const LEGACY_KEYS = {
+export const LEGACY_KEYS = {
   COURSES: 'dkv_courses_v1',
   TASKS: 'dkv_tasks_v1',
   PORTFOLIO: 'dkv_portfolio_v1',

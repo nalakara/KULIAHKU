@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { STORES, idbGet, idbPutRecord, idbDelete, idbGetAll } from './idb';
+import { STORES, idbGet, idbPutRecord, idbDelete, idbGetAll, idbClear } from './idb';
 
 export interface StoredAsset {
   id: string;
@@ -150,6 +150,25 @@ export async function restoreAsset(id: string, mimeType: string, blob: Blob): Pr
     blob,
     createdAt: new Date().toISOString(),
   });
+}
+
+/**
+ * Remove all stored asset Blobs and revoke all in-memory Object URLs.
+ * Leaves no orphaned blobs or cached references.
+ */
+export async function clearAllAssets(): Promise<void> {
+  // Revoke all in-memory Object URLs to prevent browser memory leaks
+  for (const url of objectUrlCache.values()) {
+    try {
+      URL.revokeObjectURL(url);
+    } catch {
+      // Ignore
+    }
+  }
+  objectUrlCache.clear();
+
+  // Clear asset_store object store in IndexedDB
+  await idbClear(STORES.ASSETS);
 }
 
 /**

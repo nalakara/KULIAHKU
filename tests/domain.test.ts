@@ -32,6 +32,8 @@ import {
 
 import { filterPortfolio, calculatePortfolioStats } from '../src/domain/portfolio.ts';
 import { collectReferencedAssetIds } from '../src/infrastructure/storage/assetStore.ts';
+import { resetAllUserData, LIGHT_CACHE_KEYS, FRESH_INITIAL_PROFILE } from '../src/infrastructure/storage/appStorage.ts';
+import { MIGRATION_FLAG } from '../src/infrastructure/storage/migration.ts';
 
 import type { CourseSchedule, VisualTask, RPSMeeting, CourseRPS, StudySession, PortfolioItem, UserProfile } from '../src/types.ts';
 
@@ -311,4 +313,54 @@ test('assets domain: collectReferencedAssetIds safely scans records', () => {
   // External URLs must NOT be counted as local asset IDs
   assert.equal(referenced.has('https://unsplash.com/photo.jpg'), false);
   assert.equal(referenced.size, 5);
+});
+
+test('storage reset: resetAllUserData safely resets data without orphaned assets', async () => {
+  // Mock localStorage for Node environment if not present
+  const mockStorage: Record<string, string> = {};
+  if (typeof globalThis.localStorage === 'undefined') {
+    (globalThis as any).localStorage = {
+      getItem: (k: string) => mockStorage[k] || null,
+      setItem: (k: string, v: string) => { mockStorage[k] = v; },
+      removeItem: (k: string) => { delete mockStorage[k]; },
+      clear: () => { Object.keys(mockStorage).forEach(k => delete mockStorage[k]); },
+    };
+  }
+
+  // Pre-seed some dummy keys
+  localStorage.setItem(LIGHT_CACHE_KEYS.COURSES, JSON.stringify([{ id: 'c1' }]));
+  localStorage.setItem(LIGHT_CACHE_KEYS.TASKS, JSON.stringify([{ id: 't1' }]));
+
+  // Run reset
+  await resetAllUserData();
+
+  // Verify light cache courses & tasks are reset to empty arrays
+  const coursesRaw = localStorage.getItem(LIGHT_CACHE_KEYS.COURSES);
+  assert.ok(coursesRaw);
+  assert.deepEqual(JSON.parse(coursesRaw), []);
+
+  const tasksRaw = localStorage.getItem(LIGHT_CACHE_KEYS.TASKS);
+  assert.ok(tasksRaw);
+  assert.deepEqual(JSON.parse(tasksRaw), []);
+
+  const portfolioRaw = localStorage.getItem(LIGHT_CACHE_KEYS.PORTFOLIO);
+  assert.ok(portfolioRaw);
+  assert.deepEqual(JSON.parse(portfolioRaw), []);
+
+  const sessionsRaw = localStorage.getItem(LIGHT_CACHE_KEYS.SESSIONS);
+  assert.ok(sessionsRaw);
+  assert.deepEqual(JSON.parse(sessionsRaw), []);
+
+  const profileRaw = localStorage.getItem(LIGHT_CACHE_KEYS.PROFILE);
+  assert.ok(profileRaw);
+  const parsedProfile = JSON.parse(profileRaw);
+  assert.equal(parsedProfile.fullName, FRESH_INITIAL_PROFILE.fullName);
+  assert.equal(parsedProfile.avatarUrl, '');
+
+  // Verify migration flag is preserved as true to prevent auto-reseed
+  assert.equal(localStorage.getItem(MIGRATION_FLAG), 'true');
+
+  // Verify safe to run again when already empty (idempotency)
+  await resetAllUserData();
+  assert.deepEqual(JSON.parse(localStorage.getItem(LIGHT_CACHE_KEYS.COURSES)!), []);
 });

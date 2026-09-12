@@ -10,11 +10,13 @@ import {
   AlertCircle,
   FileJson,
   HardDrive,
-  Clock
+  Clock,
+  Trash2
 } from 'lucide-react';
 import { UserSettings, CourseSchedule, VisualTask, PortfolioItem, StudySession, UserProfile, CourseRPS } from '../types';
 import { exportBackupData, triggerDownloadBackup, AppDataBackup } from '../utils/storage';
 import { playChime } from '../utils/audioAlert';
+import { ResetConfirmationModal } from './ResetConfirmationModal';
 
 interface CloudSyncModalProps {
   isOpen: boolean;
@@ -28,6 +30,7 @@ interface CloudSyncModalProps {
   profile?: UserProfile;
   rps?: CourseRPS[];
   onRestoreBackup: (backup: AppDataBackup) => void;
+  onResetData?: () => void;
   onRequestNotificationPermission: () => void;
   onSendTestNotification: () => void;
 }
@@ -44,12 +47,15 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
   profile,
   rps,
   onRestoreBackup,
+  onResetData,
   onRequestNotificationPermission,
   onSendTestNotification,
 }) => {
   const [restoreSuccess, setRestoreSuccess] = useState(false);
   const [restoreError, setRestoreError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -280,6 +286,29 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
               </div>
             )}
           </div>
+
+          {/* Reset Data Section */}
+          <div className="p-3.5 rounded-md nlk-surface-secondary border border-neutral-700/50 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-semibold nlk-text-primary flex items-center gap-2">
+                  <Trash2 className="w-4 h-4 text-rose-400" />
+                  Reset Data
+                </h4>
+                <p className="text-[11px] nlk-text-tertiary mt-0.5">
+                  Kembalikan aplikasi ke kondisi awal yang bersih tanpa data demo atau data pribadi sebelumnya.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsResetModalOpen(true)}
+                className="px-3 py-1.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold transition active:scale-[0.98] flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Reset Data</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Modal Footer */}
@@ -295,6 +324,26 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <ResetConfirmationModal
+        isOpen={isResetModalOpen}
+        onClose={() => {
+          if (!isResetting) setIsResetModalOpen(false);
+        }}
+        onConfirm={async () => {
+          if (onResetData) {
+            setIsResetting(true);
+            try {
+              await onResetData();
+            } finally {
+              setIsResetting(false);
+              setIsResetModalOpen(false);
+            }
+          }
+        }}
+        isResetting={isResetting}
+      />
     </div>
   );
 };

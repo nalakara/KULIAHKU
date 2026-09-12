@@ -108,3 +108,15 @@ export async function idbGetAll<T>(storeName: string): Promise<T[]> {
     request.onerror = () => reject(request.error);
   });
 }
+
+export async function idbClear(storeName: string): Promise<void> {
+  const db = await getIDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    const request = store.clear();
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}

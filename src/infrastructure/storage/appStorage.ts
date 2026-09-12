@@ -16,8 +16,9 @@ import {
   INITIAL_PROFILE,
   INITIAL_RPS,
 } from '../../data/initialData';
-import { STORES, idbSet } from './idb';
-import { getAllAssets, restoreAsset, blobToDataUrl, dataUrlToBlob, collectReferencedAssetIds } from './assetStore';
+import { STORES, idbSet, idbClear } from './idb';
+import { getAllAssets, restoreAsset, blobToDataUrl, dataUrlToBlob, collectReferencedAssetIds, clearAllAssets } from './assetStore';
+import { MIGRATION_FLAG, LEGACY_KEYS } from './migration';
 
 const LIGHT_CACHE_KEYS = {
   COURSES: 'kuliahku_c_courses',
@@ -206,6 +207,8 @@ export async function restoreBackupData(backup: AppDataBackup): Promise<void> {
 }
 
 // Helpers
+export { LIGHT_CACHE_KEYS };
+
 function readLightCache<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
@@ -225,4 +228,89 @@ function writeLightCache<T>(key: string, data: T): void {
 
 function logErr(err: unknown) {
   console.warn('Persistence warning:', err);
+}
+
+/**
+ * Default clean initial state for a fresh user installation (e.g. Lingga)
+ */
+export const FRESH_INITIAL_PROFILE: UserProfile = {
+  fullName: 'Mahasiswa DKV',
+  avatarUrl: '',
+  university: 'Institut Seni Indonesia Yogyakarta',
+  faculty: 'Fakultas Seni Rupa',
+  major: 'Desain Komunikasi Visual (DKV)',
+  nim: '',
+  semester: 1,
+  academicYear: '2025/2026',
+  specialization: 'Desain Grafis & Komunikasi Visual',
+  email: '',
+  bio: '',
+  advisor: '',
+  skills: [],
+  tools: [],
+};
+
+/**
+ * Comprehensive Safe Reset Data operation:
+ * 1. Clears structured application data store in IndexedDB.
+ * 2. Clears all binary asset blobs and revokes in-memory Object URLs.
+ * 3. Removes all localStorage light structured cache keys.
+ * 4. Cleans up legacy localStorage keys.
+ * 5. Sets clean default empty states into IndexedDB and light cache so
+ *    application loads clean without re-hydrating stale demo data.
+ * 6. Marks MIGRATION_FLAG so migration will not attempt to read old legacy items.
+ */
+export async function resetAllUserData(): Promise<void> {
+  // 1. Clear IndexedDB stores completely
+  await idbClear(STORES.APP_DATA).catch(logErr);
+  await clearAllAssets().catch(logErr);
+
+  // 2. Clear light cache keys from localStorage
+  Object.values(LIGHT_CACHE_KEYS).forEach(k => {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      // Ignore
+    }
+  });
+
+  // 3. Clear legacy localStorage keys if any linger
+  Object.values(LEGACY_KEYS).forEach(k => {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      // Ignore
+    }
+  });
+
+  // 4. Seed clean, empty default initial state
+  const cleanCourses: CourseSchedule[] = [];
+  const cleanTasks: VisualTask[] = [];
+  const cleanPortfolio: PortfolioItem[] = [];
+  const cleanSessions: StudySession[] = [];
+  const cleanSettings: UserSettings = {
+    darkMode: true,
+    soundAlerts: true,
+    browserNotifications: false,
+    courseAlertMinutes: 30,
+    taskAlertHours: 24,
+  };
+  const cleanProfile: UserProfile = { ...FRESH_INITIAL_PROFILE };
+  const cleanRPS: CourseRPS[] = [];
+
+  // Write clean state into light cache and IndexedDB
+  await persistCourses(cleanCourses);
+  await persistTasks(cleanTasks);
+  await persistPortfolio(cleanPortfolio);
+  await persistSessions(cleanSessions);
+  await persistSettings(cleanSettings);
+  await persistProfile(cleanProfile);
+  await persistRPS(cleanRPS);
+
+  // 5. Ensure migration flag is set so migration won't re-seed
+  try {
+    localStorage.setItem(MIGRATION_FLAG, 'true');
+  } catch {
+    // Ignore
+  }
 }

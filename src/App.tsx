@@ -46,6 +46,7 @@ import {
   saveRPS,
   initializeAndMigrateStorage,
   restoreBackupData,
+  resetAllUserData,
   AppDataBackup,
 } from './utils/storage';
 import { pruneOrphanedAssets } from './infrastructure/storage/assetStore';
@@ -275,6 +276,15 @@ export default function App() {
     if (backup.settings) setSettings(backup.settings);
     if (backup.profile) setProfile(backup.profile);
     if (backup.rps) setRpsList(backup.rps);
+  };
+
+  // Safe Data Reset for Lingga / Fresh installation
+  const handleResetData = async () => {
+    await resetAllUserData();
+    // Safely reload to clear all in-memory React state and rehydrate fresh installation state
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   };
 
   // Task Actions
@@ -629,6 +639,7 @@ export default function App() {
         profile={profile}
         rps={rpsList}
         onRestoreBackup={handleRestoreBackup}
+        onResetData={handleResetData}
         onRequestNotificationPermission={handleRequestNotificationPermission}
         onSendTestNotification={handleSendTestNotification}
       />
