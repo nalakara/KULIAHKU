@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
-import { ActiveTab } from './components/Navigation';
 import { ScheduleView } from './components/ScheduleView';
 import { VisualTasksView } from './components/VisualTasksView';
 import { FocusTimerView } from './components/FocusTimerView';
@@ -16,6 +15,7 @@ import { DevelopmentEstimationModal } from './components/DevelopmentEstimationMo
 import { OfflineIndicator } from './components/OfflineIndicator';
 
 import {
+  ActiveTab,
   CourseSchedule,
   VisualTask,
   PortfolioItem,
@@ -161,12 +161,8 @@ export default function App() {
 
   useEffect(() => {
     saveSettings(settings);
-    // Apply dark mode class to root
-    if (settings.darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    // Ensure dark studio workspace class is active
+    document.documentElement.classList.add('dark');
   }, [settings]);
 
   // Initial mount: hydrate from IndexedDB and run migration if needed
@@ -562,19 +558,19 @@ export default function App() {
         </main>
 
         {/* Minimalist Footer */}
-        <footer className="border-t border-slate-900 bg-slate-950/80 dark:border-[#1a1b20] py-5 px-4 text-center text-xs text-slate-500">
+        <footer className="border-t border-slate-900 bg-slate-950/80 dark:border-[#1a1b20] py-5 px-4 text-center text-xs text-slate-400">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>KULIAHKU Progressive Web App • Desain Komunikasi Visual</span>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setIsEstimationModalOpen(true)}
-                className="hover:text-indigo-400 transition"
+                className="hover:text-indigo-400 transition focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
               >
                 Estimasi Waktu Pengembangan
               </button>
               <button
                 onClick={() => setIsSyncModalOpen(true)}
-                className="hover:text-indigo-400 transition"
+                className="hover:text-indigo-400 transition focus:outline-none focus-visible:ring-1 focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
               >
                 Cadangan Data Mandiri
               </button>

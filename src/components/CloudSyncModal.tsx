@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Download, 
   Upload, 
@@ -50,6 +50,17 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
   const [restoreSuccess, setRestoreSuccess] = useState(false);
   const [restoreError, setRestoreError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -105,8 +116,10 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            aria-label="Tutup Modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -127,10 +140,10 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                     Aktif & Aman
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
                   Seluruh jadwal kuliah, tugas visual, aset moodboard, dan karya portofolio Anda disimpan langsung di browser perangkat ini melalui <strong>IndexedDB & Blob Storage</strong>. Aplikasi dapat digunakan sepenuhnya tanpa koneksi internet.
                 </p>
-                <div className="pt-2 text-[11px] text-slate-500 flex items-center gap-1.5">
+                <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   <span>Sinkronisasi otomatis ke awan multi-perangkat direncanakan untuk pembaruan berikutnya.</span>
                 </div>
@@ -161,7 +174,7 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                   }}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
               </label>
             </div>
 
@@ -173,7 +186,7 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                 <select
                   value={settings.courseAlertMinutes}
                   onChange={(e) => onUpdateSettings({ courseAlertMinutes: Number(e.target.value) })}
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                  className="w-full rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                 >
                   <option value={15}>15 menit sebelum kuliah</option>
                   <option value={30}>30 menit sebelum kuliah (Standar)</option>
@@ -189,7 +202,7 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                 <select
                   value={settings.taskAlertHours}
                   onChange={(e) => onUpdateSettings({ taskAlertHours: Number(e.target.value) })}
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                  className="w-full rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                 >
                   <option value={6}>6 jam sebelum deadline</option>
                   <option value={12}>12 jam sebelum deadline</option>
@@ -206,7 +219,7 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
                   type="checkbox"
                   checked={settings.soundAlerts}
                   onChange={(e) => onUpdateSettings({ soundAlerts: e.target.checked })}
-                  className="rounded border-slate-700 text-indigo-600 focus:ring-0"
+                  className="rounded border-slate-700 text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500"
                 />
                 <Volume2 className="w-3.5 h-3.5 text-indigo-400" />
                 <span>Efek Suara & Bell Studio</span>
@@ -214,7 +227,7 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
 
               <button
                 onClick={onSendTestNotification}
-                className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium transition"
+                className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 Uji Notifikasi Sekarang
               </button>
@@ -235,13 +248,13 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
               <button
                 onClick={handleDownloadBackup}
                 disabled={isExporting}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 border border-slate-700 text-white font-semibold transition"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 border border-slate-700 text-white font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <Download className="w-3.5 h-3.5 text-indigo-400" />
                 <span>{isExporting ? 'Menyiapkan...' : 'Unduh Cadangan (.json)'}</span>
               </button>
 
-              <label className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-semibold transition cursor-pointer">
+              <label className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-semibold transition cursor-pointer focus-within:ring-2 focus-within:ring-indigo-400">
                 <Upload className="w-3.5 h-3.5 text-pink-400" />
                 <span>Pulihkan dari Berkas</span>
                 <input
@@ -271,12 +284,12 @@ export const CloudSyncModal: React.FC<CloudSyncModalProps> = ({
 
         {/* Modal Footer */}
         <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-slate-400">
             Arsitektur Ringan (Vanilla Client + Service Worker PWA)
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition"
+            className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
           >
             Selesai
           </button>

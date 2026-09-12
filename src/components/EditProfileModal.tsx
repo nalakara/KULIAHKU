@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Camera, 
@@ -59,6 +59,17 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const [newSkill, setNewSkill] = useState('');
   const [newTool, setNewTool] = useState('');
   const [showPresets, setShowPresets] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -155,7 +166,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
           >
             <X className="w-5 h-5" />
           </button>
@@ -200,7 +211,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={formData.avatarUrl}
                     onChange={handleChange}
                     placeholder="https://example.com/photo.jpg"
-                    className="w-full mt-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                   />
                 </div>
                 
@@ -208,7 +219,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowPresets(!showPresets)}
-                    className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                    className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
                   >
                     <ImageIcon className="w-3.5 h-3.5" />
                     <span>{showPresets ? 'Sembunyikan Preset Avatar' : 'Pilih dari Preset Karakter'}</span>
@@ -222,7 +233,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                         key={idx}
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, avatarUrl: p.url }))}
-                        className={`flex items-center gap-1.5 p-1 rounded-lg border transition text-[11px] whitespace-nowrap ${
+                        className={`flex items-center gap-1.5 p-1 rounded-lg border transition text-[11px] whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
                           formData.avatarUrl === p.url 
                             ? 'bg-indigo-600/30 border-indigo-500 text-indigo-200' 
                             : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
@@ -252,7 +263,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Nama Mahasiswa"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -268,7 +279,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.nim}
                 onChange={handleChange}
                 placeholder="Contoh: 22104589012"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -284,7 +295,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.university}
                 onChange={handleChange}
                 placeholder="Contoh: Institut Seni Indonesia Yogyakarta"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -300,7 +311,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.major}
                 onChange={handleChange}
                 placeholder="Desain Komunikasi Visual (DKV)"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -313,7 +324,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 name="semester"
                 value={formData.semester}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
                   <option key={s} value={s}>Semester {s} {s % 2 === 0 ? '(Genap)' : '(Ganjil)'}</option>
@@ -332,7 +343,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.academicYear}
                 onChange={handleChange}
                 placeholder="Contoh: 2025/2026 - Semester Genap"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -347,7 +358,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.specialization}
                 onChange={handleChange}
                 placeholder="Contoh: Branding & Media Interaktif"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -362,7 +373,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="nama.dkv@student.ac.id"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
           </div>
@@ -379,7 +390,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.faculty}
                 onChange={handleChange}
                 placeholder="Contoh: Fakultas Seni Rupa / Desain"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
             <div>
@@ -392,7 +403,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={formData.advisor}
                 onChange={handleChange}
                 placeholder="Nama Dosen Pembimbing"
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
           </div>
@@ -408,7 +419,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={formData.bio}
               onChange={handleChange}
               placeholder="Deskripsikan pendekatan desain dan ketertarikan visual Anda..."
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 resize-none leading-relaxed"
+              className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50 resize-none leading-relaxed"
             />
           </div>
 
@@ -424,12 +435,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
                 placeholder="Tambah keahlian (contoh: Tipografi, UI/UX, Kemasan)"
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
               <button
                 type="button"
                 onClick={handleAddSkill}
-                className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tambah</span>
@@ -466,12 +477,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 onChange={(e) => setNewTool(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTool())}
                 placeholder="Tambah software (contoh: Figma, Illustrator, Blender)"
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
               <button
                 type="button"
                 onClick={handleAddTool}
-                className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tambah</span>
@@ -501,13 +512,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition"
+              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-1.5"
+              className="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
             >
               <Check className="w-4 h-4" />
               <span>Simpan Perubahan</span>

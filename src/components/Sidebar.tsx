@@ -15,8 +15,7 @@ import {
   Sliders,
   GraduationCap
 } from 'lucide-react';
-import { ActiveTab } from './Navigation';
-import { UserProfile, UserSettings } from '../types';
+import { ActiveTab, UserProfile, UserSettings } from '../types';
 import { AssetImage } from './AssetImage';
 
 interface SidebarProps {
@@ -159,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="text-xs font-semibold text-slate-300 tracking-wide block truncate uppercase">
                 Studio Workspace
               </span>
-              <p className="text-[10px] text-slate-500 truncate">
+              <p className="text-[10px] text-slate-400 truncate">
                 Desain Komunikasi Visual
               </p>
             </div>
@@ -243,7 +242,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
 
                   <p className={`text-[10px] truncate ${
-                    isActive ? 'text-indigo-200' : 'text-slate-500 group-hover:text-slate-400'
+                    isActive ? 'text-indigo-200' : 'text-slate-400 group-hover:text-slate-300'
                   }`}>
                     {item.description}
                   </p>

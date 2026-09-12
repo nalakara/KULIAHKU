@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  Sun, 
-  Moon, 
   Cloud, 
   CloudCheck, 
   Bell, 
@@ -188,13 +186,13 @@ export const Header: React.FC<HeaderProps> = ({
                           <p className="text-slate-300 text-[11px] mt-0.5 leading-relaxed">
                             {item.message}
                           </p>
-                          <span className="text-[10px] text-slate-500 mt-1 block">
+                          <span className="text-[10px] text-slate-400 mt-1 block">
                             {new Date(item.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
                         <button
                           onClick={() => onClearNotification(item.id)}
-                          className="text-slate-500 hover:text-slate-300 text-[11px] px-1"
+                          className="text-slate-400 hover:text-slate-200 text-[11px] px-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
                         >
                           ✕
                         </button>
@@ -215,20 +213,6 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             )}
           </div>
-
-          {/* Dark Mode Minimalist Toggle */}
-          <button
-            id="dark-mode-toggle-btn"
-            onClick={() => onUpdateSettings({ darkMode: !settings.darkMode })}
-            className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition"
-            title={settings.darkMode ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap Minimalis'}
-          >
-            {settings.darkMode ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-indigo-400" />
-            )}
-          </button>
 
           {/* Student Profile Quick Trigger */}
           {profile && onSelectProfileTab && (

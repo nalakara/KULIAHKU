@@ -152,7 +152,7 @@ export const VisualTasksView: React.FC<VisualTasksViewProps> = ({
           <h3 className="text-sm font-semibold text-slate-300">
             Tidak ada tugas visual di kategori ini
           </h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
             Semua tugas di tahapan ini telah selesai atau belum dibuat.
           </p>
           <button

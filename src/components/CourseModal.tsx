@@ -77,6 +77,17 @@ export const CourseModal: React.FC<CourseModalProps> = ({
     }
   }, [courseToEdit, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -109,7 +120,12 @@ export const CourseModal: React.FC<CourseModalProps> = ({
             </h3>
             <p className="text-xs text-slate-400">Jadwal kelas, studio, lab komputer, dan ruangan DKV</p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            aria-label="Tutup Modal"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -125,7 +141,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 value={courseCode}
                 onChange={(e) => setCourseCode(e.target.value)}
                 placeholder="DKV301"
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 font-mono"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50 font-mono"
               />
             </div>
             <div className="sm:col-span-2">
@@ -136,7 +152,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 value={courseName}
                 onChange={(e) => setCourseName(e.target.value)}
                 placeholder="Tipografi Nusantara, UI/UX..."
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
           </div>
@@ -149,7 +165,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               value={lecturer}
               onChange={(e) => setLecturer(e.target.value)}
               placeholder="Dr. Nama Dosen, M.Sn."
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
 
@@ -159,7 +175,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <select
                 value={day}
                 onChange={(e) => setDay(e.target.value as DayOfWeek)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {DAYS.map(d => (
                   <option key={d} value={d}>{d}</option>
@@ -174,7 +190,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 required
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -185,7 +201,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 required
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
           </div>
@@ -196,7 +212,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <select
                 value={studioType}
                 onChange={(e) => setStudioType(e.target.value as StudioType)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {STUDIO_TYPES.map(s => (
                   <option key={s} value={s}>{s}</option>
@@ -209,7 +225,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <select
                 value={sks}
                 onChange={(e) => setSks(Number(e.target.value))}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {[1, 2, 3, 4, 5, 6].map(val => (
                   <option key={val} value={val}>{val} SKS</option>
@@ -226,7 +242,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               value={room}
               onChange={(e) => setRoom(e.target.value)}
               placeholder="Studio DKV 3 - Gedung B Lt. 2"
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
 
@@ -239,10 +255,11 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   key={c}
                   type="button"
                   onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full transition-transform ${
+                  className={`w-7 h-7 rounded-full transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
                     color === c ? 'scale-125 ring-2 ring-white ring-offset-2 ring-offset-slate-900' : 'opacity-70 hover:opacity-100'
                   }`}
                   style={{ backgroundColor: c }}
+                  aria-label={`Warna aksen ${c}`}
                 />
               ))}
             </div>
@@ -255,7 +272,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Bawa sketchbook A3, drawing pen 0.1-0.8, laptop & charger..."
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white p-2.5 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white p-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
 
@@ -263,13 +280,13 @@ export const CourseModal: React.FC<CourseModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30"
+              className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               Simpan Jadwal Kuliah
             </button>

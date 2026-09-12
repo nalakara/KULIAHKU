@@ -281,12 +281,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {/* Advisor & Email badge */}
         <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-400">
           <div className="flex items-center gap-1.5">
-            <span className="text-slate-500 font-medium">Dosen Pembimbing Akademik:</span>
+            <span className="text-slate-400 font-medium">Dosen Pembimbing Akademik:</span>
             <span className="text-slate-300 font-semibold">{profile.advisor}</span>
           </div>
           <span className="text-slate-700">•</span>
           <div className="flex items-center gap-1.5">
-            <Mail className="w-3 h-3 text-slate-500" />
+            <Mail className="w-3 h-3 text-slate-400" />
             <span className="text-slate-300 font-mono text-[11px]">{profile.email}</span>
           </div>
         </div>
@@ -493,21 +493,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 <div className="flex items-center gap-2.5">
                   <Clock className="w-4 h-4 text-indigo-400" />
                   <div>
-                    <span className="text-slate-500 block text-[10px]">Waktu Kuliah Studio:</span>
+                    <span className="text-slate-400 block text-[10px]">Waktu Kuliah Studio:</span>
                     <span className="text-slate-200 font-semibold">{activeCourse.day}, {activeCourse.startTime} - {activeCourse.endTime} WIB</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-pink-400" />
                   <div>
-                    <span className="text-slate-500 block text-[10px]">Ruang Studio / Lab:</span>
+                    <span className="text-slate-400 block text-[10px]">Ruang Studio / Lab:</span>
                     <span className="text-slate-200 font-semibold">{activeCourse.room}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <User className="w-4 h-4 text-cyan-400" />
                   <div>
-                    <span className="text-slate-500 block text-[10px]">Dosen Pengampu:</span>
+                    <span className="text-slate-400 block text-[10px]">Dosen Pengampu:</span>
                     <span className="text-slate-200 font-semibold">{activeCourse.lecturer}</span>
                   </div>
                 </div>

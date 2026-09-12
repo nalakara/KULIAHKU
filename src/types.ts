@@ -1,3 +1,5 @@
+export type ActiveTab = 'schedule' | 'tasks' | 'timer' | 'portfolio' | 'stats' | 'profile' | 'settings';
+
 export type DayOfWeek = 'Senin' | 'Selasa' | 'Rabu' | 'Kamis' | 'Jumat' | 'Sabtu' | 'Minggu';
 
 export type StudioType = 

@@ -185,7 +185,6 @@ export function triggerDownloadBackup(backup: AppDataBackup) {
  * Restore an imported backup object into IndexedDB and light cache
  */
 export async function restoreBackupData(backup: AppDataBackup): Promise<void> {
-  // 1. Unpack assets if present
   if (Array.isArray(backup.assets)) {
     for (const a of backup.assets) {
       try {
@@ -197,7 +196,6 @@ export async function restoreBackupData(backup: AppDataBackup): Promise<void> {
     }
   }
 
-  // 2. Persist structured collections
   if (backup.courses) await persistCourses(backup.courses);
   if (backup.tasks) await persistTasks(backup.tasks);
   if (backup.portfolio) await persistPortfolio(backup.portfolio);

@@ -153,7 +153,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
           <h3 className="text-sm font-semibold text-slate-300">
             Belum ada jadwal kuliah untuk hari {selectedDay}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
             Tambahkan mata kuliah studio, lab komputer, atau teori DKV ke dalam kalender mingguan Anda.
           </p>
           <button
@@ -182,7 +182,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                     <span className="font-mono text-xs font-semibold text-slate-400">
                       {course.courseCode}
                     </span>
-                    <span className="text-[11px] font-medium text-slate-500">
+                    <span className="text-[11px] font-medium text-slate-400">
                       • {course.sks} SKS
                     </span>
                   </div>

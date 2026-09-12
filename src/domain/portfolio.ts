@@ -44,16 +44,13 @@ export function calculatePortfolioStats(items: PortfolioItem[]) {
   const categoryCounts: Record<string, number> = {};
 
   items.forEach(item => {
-    // Count software
     item.softwareUsed.forEach(sw => {
       softwareCounts[sw] = (softwareCounts[sw] || 0) + 1;
     });
 
-    // Count categories
     categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
   });
 
-  // Sort software by popularity
   const topSoftware = Object.entries(softwareCounts)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count);

@@ -268,7 +268,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
           <select
             value={selectedTaskId}
             onChange={(e) => setSelectedTaskId(e.target.value)}
-            className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-200 px-3 py-2 focus:outline-none focus:border-indigo-500"
+            className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-200 px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
           >
             <option value="">-- Eksplorasi Desain Bebas --</option>
             {tasks.map(t => (
@@ -335,7 +335,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
         </h3>
 
         {recentSessions.length === 0 ? (
-          <p className="text-xs text-slate-500 py-3 text-center">
+          <p className="text-xs text-slate-400 py-3 text-center">
             Belum ada sesi fokus yang tercatat. Mulai sesi pertama Anda untuk memantau kemajuan mingguan!
           </p>
         ) : (
@@ -355,7 +355,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
                   <span className="font-mono text-xs font-bold text-indigo-400">
                     +{sess.durationMinutes} menit
                   </span>
-                  <span className="block text-[10px] text-slate-500 mt-0.5">
+                  <span className="block text-[10px] text-slate-400 mt-0.5">
                     {sess.dateString}
                   </span>
                 </div>

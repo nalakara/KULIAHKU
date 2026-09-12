@@ -39,7 +39,6 @@ function isDataUrl(str: string): boolean {
 export async function initializeAndMigrateStorage(): Promise<StorageDataState> {
   const isMigrated = localStorage.getItem(MIGRATION_FLAG) === 'true';
 
-  // 1. If already migrated, attempt to load directly from IndexedDB
   if (isMigrated) {
     try {
       const [courses, tasks, portfolio, sessions, settings, profile, rps] = await Promise.all([
@@ -68,7 +67,6 @@ export async function initializeAndMigrateStorage(): Promise<StorageDataState> {
     }
   }
 
-  // 2. Read from legacy localStorage
   let rawCourses = loadLegacy<CourseSchedule[]>(LEGACY_KEYS.COURSES, INITIAL_COURSES);
   let rawTasks = loadLegacy<VisualTask[]>(LEGACY_KEYS.TASKS, INITIAL_TASKS);
   let rawPortfolio = loadLegacy<PortfolioItem[]>(LEGACY_KEYS.PORTFOLIO, INITIAL_PORTFOLIO);
@@ -77,7 +75,6 @@ export async function initializeAndMigrateStorage(): Promise<StorageDataState> {
   let rawProfile = loadLegacy<UserProfile>(LEGACY_KEYS.PROFILE, INITIAL_PROFILE);
   let rawRps = loadLegacy<CourseRPS[]>(LEGACY_KEYS.RPS, INITIAL_RPS);
 
-  // 3. Migrate Base64 images to IndexedDB Asset Store
   const migratedTasks: VisualTask[] = [];
   for (const task of rawTasks) {
     const migratedMoodboards: string[] = [];
@@ -144,7 +141,6 @@ export async function initializeAndMigrateStorage(): Promise<StorageDataState> {
     }
   }
 
-  // 4. Save structured entities to IndexedDB
   try {
     await Promise.all([
       idbSet(STORES.APP_DATA, 'courses', rawCourses),
@@ -156,7 +152,6 @@ export async function initializeAndMigrateStorage(): Promise<StorageDataState> {
       idbSet(STORES.APP_DATA, 'rps', rawRps),
     ]);
 
-    // 5. Mark migration complete and free legacy Base64 data from localStorage
     localStorage.setItem(MIGRATION_FLAG, 'true');
     cleanupLegacyStorage();
   } catch (err) {

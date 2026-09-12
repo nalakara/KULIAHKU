@@ -92,6 +92,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     }
   }, [taskToEdit, defaultCourseId, courses, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleAddImage = () => {
@@ -161,7 +172,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               Dokumentasikan karya, tenggat, moodboard, dan palet warna desain
             </p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            aria-label="Tutup Modal"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -179,7 +195,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Contoh: Redesain Kemasan Kopi Herbal 'Soma'"
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-sm text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-sm text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
 
@@ -192,7 +208,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={courseId}
                 onChange={(e) => setCourseId(e.target.value)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {courses.map(c => (
                   <option key={c.id} value={c.id}>
@@ -209,7 +225,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={deliverableType}
                 onChange={(e) => setDeliverableType(e.target.value as DeliverableType)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2.5 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {DELIVERABLES.map(del => (
                   <option key={del} value={del}>{del}</option>
@@ -229,7 +245,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 required
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
             </div>
 
@@ -240,7 +256,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={stage}
                 onChange={(e) => setStage(e.target.value as VisualStage)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {STAGES.map(stg => (
                   <option key={stg} value={stg}>{stg}</option>
@@ -255,7 +271,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as PriorityLevel)}
-                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               >
                 {PRIORITIES.map(p => (
                   <option key={p} value={p}>{p}</option>
@@ -274,7 +290,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Spesifikasi teknis, ukuran cetak A2/A3, resolusi 300 DPI, format serahan PDF/Figma link..."
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-white p-3 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
 
@@ -290,7 +306,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
 
             <div className="flex flex-wrap items-center gap-2">
               {colorPalette.map((col, idx) => (
-                <div key={idx} className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-lg border border-slate-700">
+                <div key={idx} className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-lg border border-slate-700 focus-within:ring-2 focus-within:ring-indigo-400">
                   <span className="w-3.5 h-3.5 rounded-full border border-white/20" style={{ backgroundColor: col }} />
                   <input
                     type="text"
@@ -306,7 +322,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setColorPalette(colorPalette.filter((_, i) => i !== idx))}
-                      className="text-slate-500 hover:text-pink-400 text-xs px-0.5"
+                      className="text-slate-400 hover:text-pink-400 text-xs px-0.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
                     >
                       ×
                     </button>
@@ -317,7 +333,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setColorPalette([...colorPalette, '#3B82F6'])}
-                  className="px-2 py-1 rounded-lg bg-slate-700 text-[11px] text-slate-300 hover:bg-slate-600"
+                  className="px-2 py-1 rounded-lg bg-slate-700 text-[11px] text-slate-300 hover:bg-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                 >
                   + Warna
                 </button>
@@ -326,13 +342,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({
 
             {/* Quick Presets */}
             <div className="flex items-center gap-2 pt-1 overflow-x-auto pb-1">
-              <span className="text-[10px] text-slate-500">Preset:</span>
+              <span className="text-[10px] text-slate-400">Preset:</span>
               {PRESET_PALETTES.map((palette, pIdx) => (
                 <button
                   key={pIdx}
                   type="button"
                   onClick={() => setColorPalette(palette)}
-                  className="flex items-center gap-0.5 p-1 rounded-md bg-slate-900 hover:bg-slate-700 border border-slate-700"
+                  className="flex items-center gap-0.5 p-1 rounded-md bg-slate-900 hover:bg-slate-700 border border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                 >
                   {palette.map((c, cIdx) => (
                     <span key={cIdx} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
@@ -355,17 +371,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
                 placeholder="Tempel URL Gambar / Unsplash / Pinterest..."
-                className="flex-1 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500"
+                className="flex-1 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               />
               <button
                 type="button"
                 onClick={handleAddImage}
-                className="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-medium"
+                className="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
               >
                 Tambah URL
               </button>
 
-              <label className="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium cursor-pointer flex items-center gap-1">
+              <label className="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium cursor-pointer flex items-center gap-1 focus-within:ring-2 focus-within:ring-indigo-400 transition">
                 <Upload className="w-3.5 h-3.5" />
                 <span>Unggah</span>
                 <input
@@ -390,7 +406,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(idx)}
-                      className="absolute top-1 right-1 p-1 rounded bg-black/70 text-pink-400 hover:text-white"
+                      className="absolute top-1 right-1 p-1 rounded bg-black/70 text-pink-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
+                      aria-label="Hapus gambar referensi"
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>
@@ -405,13 +422,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30"
+              className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               Simpan Tugas Visual
             </button>

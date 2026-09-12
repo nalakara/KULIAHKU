@@ -196,14 +196,12 @@ export function collectReferencedAssetIds(
     }
   };
 
-  // 1. Scan tasks
   tasks.forEach(t => {
     if (Array.isArray(t.moodboardImages)) {
       t.moodboardImages.forEach(checkAndAdd);
     }
   });
 
-  // 2. Scan portfolio
   portfolio.forEach(p => {
     checkAndAdd(p.imageUrl);
     if (Array.isArray(p.additionalImages)) {
@@ -211,7 +209,6 @@ export function collectReferencedAssetIds(
     }
   });
 
-  // 3. Scan profile avatar
   if (profile?.avatarUrl) {
     checkAndAdd(profile.avatarUrl);
   }

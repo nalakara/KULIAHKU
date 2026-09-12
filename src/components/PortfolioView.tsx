@@ -89,7 +89,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
           <h3 className="text-sm font-semibold text-slate-300">
             Belum ada karya di kategori ini
           </h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
             Selesaikan tugas studio atau unggah dokumentasi karya desain grafis, ilustrasi, atau UI/UX Anda.
           </p>
           <button
@@ -176,7 +176,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
               {/* Card Footer */}
               <div className="p-4 pt-3 border-t border-slate-800/80 bg-slate-950/40 flex items-center justify-between gap-2 text-xs">
-                <span className="text-[11px] text-slate-500 flex items-center gap-1">
+                <span className="text-[11px] text-slate-400 flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {item.completionDate}
                 </span>
@@ -187,7 +187,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                       href={item.behanceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                      className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
                     >
                       <span>Link Proyek</span>
                       <ExternalLink className="w-3 h-3" />
@@ -195,7 +195,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                   )}
                   <button
                     onClick={() => onDeleteItem(item.id)}
-                    className="p-1 rounded-lg text-slate-500 hover:text-pink-400 transition"
+                    className="p-1 rounded-lg text-slate-400 hover:text-pink-400 transition focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400"
                     title="Hapus Karya"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
