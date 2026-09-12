@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="dkvGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+  </defs>
+  <!-- Background with rounded corners for PWA -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <!-- Grid accents subtle -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6 6" />
+  <circle cx="256" cy="256" r="120" fill="none" stroke="#475569" stroke-width="1.5" />
+  <!-- Stylized DKV Palette / Pen / Geometric Prism -->
+  <g transform="translate(106, 106)">
+    <!-- Palette base -->
+    <path d="M150 20 C 60 20, 10 70, 10 150 C 10 230, 80 280, 150 280 C 190 280, 210 260, 220 230 C 230 200, 270 200, 280 230 C 285 245, 290 270, 260 280 C 220 295, 270 295, 290 250 C 310 190, 290 80, 220 40 C 195 25, 175 20, 150 20 Z" fill="url(#dkvGrad)" fill-opacity="0.9" />
+    <!-- Color wells -->
+    <circle cx="90" cy="90" r="18" fill="#F43F5E" />
+    <circle cx="150" cy="70" r="18" fill="#F59E0B" />
+    <circle cx="210" cy="95" r="18" fill="#10B981" />
+    <circle cx="110" cy="160" r="18" fill="#3B82F6" />
+    <!-- Thumb hole / Central Focus -->
+    <circle cx="220" cy="180" r="24" fill="#0F172A" stroke="#CBD5E1" stroke-width="4" />
+    <!-- Stylus / Pencil vector diagonal -->
+    <path d="M70 240 L 190 120 L 210 140 L 90 260 Z" fill="#FFFFFF" fill-opacity="0.95" />
+    <polygon points="65,245 50,280 85,265" fill="#F59E0B" />
+    <polygon points="50,280 55,270 60,275" fill="#0F172A" />
+  </g>
+</svg>
