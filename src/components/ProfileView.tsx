@@ -39,6 +39,8 @@ import {
   PortfolioItem, 
   StudySession 
 } from '../types';
+import { calculateTotalSks } from '../domain/academic';
+import { calculateTaskStatistics } from '../domain/tasks';
 import { EditProfileModal } from './EditProfileModal';
 
 interface ProfileViewProps {
@@ -85,9 +87,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const [meetingFilter, setMeetingFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
   // Stats calculation
-  const totalSks = courses.reduce((acc, c) => acc + (c.sks || 0), 0);
-  const completedTasksCount = tasks.filter(t => t.isCompleted).length;
-  const activeTasksCount = tasks.filter(t => !t.isCompleted).length;
+  const totalSks = calculateTotalSks(courses);
+  const taskStats = calculateTaskStatistics(tasks);
+  const completedTasksCount = taskStats.completed;
+  const activeTasksCount = taskStats.active;
 
   // Selected course object and its RPS
   const activeCourse = courses.find(c => c.id === activeCourseId) || courses[0];

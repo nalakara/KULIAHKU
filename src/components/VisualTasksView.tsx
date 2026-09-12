@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { VisualTask, VisualStage, PriorityLevel, DeliverableType } from '../types';
+import { VISUAL_STAGES as STAGES, calculateDeadlineUrgency, filterTasks } from '../domain/tasks';
 import { playChime } from '../utils/audioAlert';
 
 interface VisualTasksViewProps {
@@ -29,15 +30,6 @@ interface VisualTasksViewProps {
   onChangeStage: (id: string, newStage: VisualStage) => void;
   onSendToPortfolio: (task: VisualTask) => void;
 }
-
-const STAGES: VisualStage[] = [
-  'Brainstorm & Konsep',
-  'Sketsa & Moodboard',
-  'Digital Asset & Wireframe',
-  'Rendering & Finalisasi',
-  'Siap Dikumpulkan',
-  'Selesai',
-];
 
 export const VisualTasksView: React.FC<VisualTasksViewProps> = ({
   tasks,
@@ -52,31 +44,7 @@ export const VisualTasksView: React.FC<VisualTasksViewProps> = ({
   const [selectedPriority, setSelectedPriority] = useState<PriorityLevel | 'Semua'>('Semua');
   const [viewMode, setViewMode] = useState<'grid' | 'kanban'>('grid');
 
-  const filteredTasks = tasks.filter(t => {
-    const stageMatch = selectedStage === 'Semua' ? true : t.stage === selectedStage;
-    const priorityMatch = selectedPriority === 'Semua' ? true : t.priority === selectedPriority;
-    return stageMatch && priorityMatch;
-  });
-
-  const calculateDeadlineUrgency = (deadlineStr: string, isCompleted: boolean) => {
-    if (isCompleted) {
-      return { text: 'Selesai', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' };
-    }
-    const diff = new Date(deadlineStr).getTime() - Date.now();
-    const hours = Math.round(diff / (1000 * 60 * 60));
-    const days = Math.round(diff / (1000 * 60 * 60 * 24));
-
-    if (diff < 0) {
-      return { text: 'Melewati Tenggat!', color: 'text-rose-400 bg-rose-500/10 border-rose-500/30' };
-    }
-    if (hours < 24) {
-      return { text: `Sisa ${hours} Jam!`, color: 'text-rose-400 bg-rose-500/10 border-rose-500/30 animate-pulse' };
-    }
-    if (days <= 3) {
-      return { text: `${days} Hari Lagi`, color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' };
-    }
-    return { text: `${days} Hari Lagi`, color: 'text-slate-300 bg-slate-800 border-slate-700' };
-  };
+  const filteredTasks = filterTasks(tasks, selectedStage, selectedPriority);
 
   const handleTaskCompletion = (id: string, currentlyCompleted: boolean) => {
     if (!currentlyCompleted) {

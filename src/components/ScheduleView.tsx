@@ -14,6 +14,7 @@ import {
   BookMarked
 } from 'lucide-react';
 import { CourseSchedule, DayOfWeek, StudioType } from '../types';
+import { DAYS_OF_WEEK, getTodayName, filterCoursesByDay, getTodaysCourses } from '../domain/academic';
 
 interface ScheduleViewProps {
   courses: CourseSchedule[];
@@ -24,8 +25,6 @@ interface ScheduleViewProps {
   onViewCourseRps?: (courseId: string) => void;
 }
 
-const DAYS: DayOfWeek[] = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-
 export const ScheduleView: React.FC<ScheduleViewProps> = ({
   courses,
   onAddCourse,
@@ -34,23 +33,11 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   onQuickCreateTaskForCourse,
   onViewCourseRps,
 }) => {
-  // Determine current day of week in Indonesian
-  const dayIndex = new Date().getDay(); // 0 Sun, 1 Mon...
-  const todayName: DayOfWeek = dayIndex === 1 ? 'Senin'
-    : dayIndex === 2 ? 'Selasa'
-    : dayIndex === 3 ? 'Rabu'
-    : dayIndex === 4 ? 'Kamis'
-    : dayIndex === 5 ? 'Jumat'
-    : dayIndex === 6 ? 'Sabtu'
-    : 'Senin';
-
+  const todayName = getTodayName();
   const [selectedDay, setSelectedDay] = useState<DayOfWeek | 'Semua'>(todayName);
 
-  const filteredCourses = selectedDay === 'Semua' 
-    ? courses 
-    : courses.filter(c => c.day === selectedDay);
-
-  const todaysCourses = courses.filter(c => c.day === todayName);
+  const filteredCourses = filterCoursesByDay(courses, selectedDay);
+  const todaysCourses = getTodaysCourses(courses, todayName);
 
   return (
     <div className="space-y-6">
@@ -131,7 +118,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
           Semua Hari ({courses.length})
         </button>
 
-        {DAYS.map(day => {
+        {DAYS_OF_WEEK.map(day => {
           const count = courses.filter(c => c.day === day).length;
           const isCurrentToday = day === todayName;
 

@@ -14,6 +14,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { VisualTask, StudySession, TimerMode } from '../types';
+import { TIMER_PRESETS } from '../domain/focus';
 import { playChime } from '../utils/audioAlert';
 
 interface FocusTimerViewProps {
@@ -21,37 +22,6 @@ interface FocusTimerViewProps {
   onSessionComplete: (session: Omit<StudySession, 'id'>) => void;
   recentSessions: StudySession[];
 }
-
-const TIMER_PRESETS: { mode: TimerMode; name: string; focusMinutes: number; breakMinutes: number; desc: string }[] = [
-  {
-    mode: 'pomodoro',
-    name: 'Pomodoro Klasik',
-    focusMinutes: 25,
-    breakMinutes: 5,
-    desc: '25 mnt fokus studio + 5 mnt istirahat mata',
-  },
-  {
-    mode: 'deep_studio',
-    name: 'Deep Studio DKV',
-    focusMinutes: 50,
-    breakMinutes: 10,
-    desc: '50 mnt eksplorasi desain mendalam + 10 mnt evaluasi',
-  },
-  {
-    mode: 'quick_sketch',
-    name: 'Sketsa Cepat / Warm-Up',
-    focusMinutes: 15,
-    breakMinutes: 3,
-    desc: '15 mnt brainstorming ide visual tanpa distraksi',
-  },
-  {
-    mode: 'stopwatch',
-    name: 'Creative Flow (Stopwatch)',
-    focusMinutes: 0,
-    breakMinutes: 0,
-    desc: 'Catat durasi kerja bebas tanpa batasan timer',
-  },
-];
 
 export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
   tasks,

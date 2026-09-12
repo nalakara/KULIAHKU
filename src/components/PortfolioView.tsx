@@ -13,6 +13,8 @@ import {
   X
 } from 'lucide-react';
 import { PortfolioItem, DeliverableType } from '../types';
+import { filterPortfolio } from '../domain/portfolio';
+import { DELIVERABLES } from '../domain/tasks';
 
 interface PortfolioViewProps {
   items: PortfolioItem[];
@@ -21,16 +23,7 @@ interface PortfolioViewProps {
   onToggleFeatured: (id: string) => void;
 }
 
-const CATEGORIES: (DeliverableType | 'Semua')[] = [
-  'Semua',
-  'Poster & Cetak',
-  'UI/UX & Prototype',
-  'Branding & Identitas',
-  'Animasi & Motion',
-  'Ilustrasi & Karakter',
-  'Kemasan / Packaging',
-  'Tipografi & Editorial',
-];
+const CATEGORIES: (DeliverableType | 'Semua')[] = ['Semua', ...DELIVERABLES];
 
 export const PortfolioView: React.FC<PortfolioViewProps> = ({
   items,
@@ -41,9 +34,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<DeliverableType | 'Semua'>('Semua');
   const [previewItem, setPreviewItem] = useState<PortfolioItem | null>(null);
 
-  const filteredItems = selectedCategory === 'Semua'
-    ? items
-    : items.filter(i => i.category === selectedCategory);
+  const filteredItems = filterPortfolio(items, selectedCategory);
 
   return (
     <div className="space-y-6">

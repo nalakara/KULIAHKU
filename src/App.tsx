@@ -48,6 +48,8 @@ import {
 } from './utils/storage';
 
 import { playChime } from './utils/audioAlert';
+import { createTaskFromRPSMeeting, taskToPortfolioDraft } from './domain/tasks';
+import { createNotification, dispatchBrowserNotification } from './domain/notifications';
 
 export default function App() {
   // Application Data States
@@ -195,30 +197,19 @@ export default function App() {
 
   // Trigger test notification
   const handleSendTestNotification = () => {
-    const testNotif: NotificationItem = {
-      id: `test-${Date.now()}`,
-      title: 'Uji Pengingat Studio DKV',
-      message: 'Notifikasi dan pengingat tenggat waktu visual berfungsi dengan optimal!',
-      type: 'task',
-      timestamp: new Date().toISOString(),
-      isRead: false,
-    };
+    const testNotif = createNotification(
+      'Uji Pengingat Studio DKV',
+      'Notifikasi dan pengingat tenggat waktu visual berfungsi dengan optimal!',
+      'task'
+    );
     setNotifications(prev => [testNotif, ...prev]);
 
     if (settings.soundAlerts) {
       playChime('notification');
     }
 
-    if (
-      settings.browserNotifications &&
-      typeof window !== 'undefined' &&
-      'Notification' in window &&
-      Notification.permission === 'granted'
-    ) {
-      new Notification(testNotif.title, {
-        body: testNotif.message,
-        icon: '/pwa-192x192.png',
-      });
+    if (settings.browserNotifications) {
+      dispatchBrowserNotification(testNotif.title, testNotif.message);
     }
   };
 
@@ -340,13 +331,14 @@ export default function App() {
 
   // Quick send task to portfolio
   const handleSendToPortfolio = (task: VisualTask) => {
+    const draft = taskToPortfolioDraft(task);
     setPortfolioInitialFromTask({
       taskId: task.id,
-      title: task.title,
-      category: task.deliverableType,
-      courseName: task.courseName,
-      description: task.description,
-      imageUrl: task.moodboardImages?.[0],
+      title: draft.title,
+      category: draft.category,
+      courseName: draft.courseOrClient,
+      description: draft.description,
+      imageUrl: draft.imageUrl,
     });
     setPortfolioItemToEdit(null);
     setIsPortfolioModalOpen(true);
@@ -360,17 +352,12 @@ export default function App() {
     };
     setSessions(prev => [newSession, ...prev]);
 
-    setNotifications(prev => [
-      {
-        id: `timer-${Date.now()}`,
-        title: 'Sesi Belajar Selesai!',
-        message: `Hebat! Anda menyelesaikan ${sess.durationMinutes} menit fokus pada "${sess.taskTitle}".`,
-        type: 'timer',
-        timestamp: new Date().toISOString(),
-        isRead: false,
-      },
-      ...prev,
-    ]);
+    const notif = createNotification(
+      'Sesi Belajar Selesai!',
+      `Hebat! Anda menyelesaikan ${sess.durationMinutes} menit fokus pada "${sess.taskTitle || 'Studio Desain'}".`,
+      'timer'
+    );
+    setNotifications(prev => [notif, ...prev]);
   };
 
   // Tasks due count for badge
@@ -384,38 +371,7 @@ export default function App() {
 
   // Quick create visual task from RPS meeting
   const handleQuickCreateTaskFromRPS = (course: CourseSchedule, meeting: RPSMeeting) => {
-    const defaultDate = new Date();
-    defaultDate.setDate(defaultDate.getDate() + 7);
-    defaultDate.setHours(23, 59, 0, 0);
-
-    const nameLower = course.courseName.toLowerCase();
-    let calculatedDeliverable: DeliverableType = 'Poster & Cetak';
-    if (nameLower.includes('ui') || nameLower.includes('ux')) {
-      calculatedDeliverable = 'UI/UX & Prototype';
-    } else if (nameLower.includes('tipografi')) {
-      calculatedDeliverable = 'Tipografi & Editorial';
-    } else if (nameLower.includes('ilustrasi')) {
-      calculatedDeliverable = 'Ilustrasi & Karakter';
-    } else if (nameLower.includes('animasi')) {
-      calculatedDeliverable = 'Animasi & Motion';
-    } else if (nameLower.includes('branding') || nameLower.includes('terpadu')) {
-      calculatedDeliverable = 'Branding & Identitas';
-    }
-
-    const newTaskPrefab: VisualTask = {
-      id: `task-${Date.now()}`,
-      courseId: course.id,
-      courseName: course.courseName,
-      title: meeting.topic.replace(/^Pertemuan Minggu ke-\d+:\s*/, ''),
-      description: `RPS Mgg ${meeting.week} (${course.courseName}): ${meeting.subTopics?.join(', ') || meeting.topic}. Luaran: ${meeting.deliverable || '-'}`,
-      deliverableType: calculatedDeliverable,
-      deadline: defaultDate.toISOString(),
-      stage: 'Brainstorm & Konsep',
-      priority: meeting.week === 8 || meeting.week === 16 ? 'Urgent!' : 'Sedang',
-      colorPalette: [course.color, '#6366F1', '#EC4899'],
-      moodboardImages: [],
-      isCompleted: false,
-    };
+    const newTaskPrefab = createTaskFromRPSMeeting(course, meeting);
     setTaskToEdit(newTaskPrefab);
     setDefaultCourseForTask(course.id);
     setIsTaskModalOpen(true);

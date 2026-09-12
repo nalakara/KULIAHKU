@@ -11,6 +11,8 @@ import {
   Award
 } from 'lucide-react';
 import { StudySession, VisualTask, CourseSchedule, PortfolioItem } from '../types';
+import { calculateWeeklyFocusStats } from '../domain/focus';
+import { calculateTaskStatistics } from '../domain/tasks';
 
 interface WeeklyStatsViewProps {
   sessions: StudySession[];
@@ -25,48 +27,20 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
   courses,
   portfolio,
 }) => {
-  // Calculate total focus minutes in the last 7 days
-  const now = new Date();
-  const past7Days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(now.getDate() - (6 - i));
-    return d.toISOString().split('T')[0];
-  });
+  const { totalMinutes, totalHours, dailyChart, byCourse, consistencyScore } = calculateWeeklyFocusStats(sessions);
+  const { total: totalTasks, completed: completedTasks, completionRate: completionPercentage } = calculateTaskStatistics(tasks);
 
-  const dayLabels = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+  const totalFocusMinutesWeek = totalMinutes;
+  const totalFocusHours = String(totalHours);
 
-  // Map minutes per day
-  const dailyMinutesMap = past7Days.map(dateStr => {
-    const daySessions = sessions.filter(s => s.dateString === dateStr);
-    const totalMins = daySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-    const dateObj = new Date(dateStr);
-    const label = dayLabels[dateObj.getDay()];
-    return {
-      date: dateStr,
-      dayLabel: label,
-      minutes: totalMins,
-    };
-  });
+  const dailyMinutesMap = dailyChart.map(d => ({
+    date: d.dateStr,
+    dayLabel: d.label,
+    minutes: d.minutes,
+  }));
+  const maxDailyMinutes = Math.max(...dailyChart.map(d => d.minutes), 60);
 
-  const totalFocusMinutesWeek = dailyMinutesMap.reduce((acc, d) => acc + d.minutes, 0);
-  const totalFocusHours = (totalFocusMinutesWeek / 60).toFixed(1);
-  const maxDailyMinutes = Math.max(...dailyMinutesMap.map(d => d.minutes), 60);
-
-  // Completed tasks count & completion rate
-  const completedTasks = tasks.filter(t => t.isCompleted).length;
-  const totalTasks = tasks.length;
-  const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
-  // Breakdown by course
-  const courseTimeMap: { [course: string]: number } = {};
-  sessions.forEach(s => {
-    const name = s.courseName || 'Studio Desain';
-    courseTimeMap[name] = (courseTimeMap[name] || 0) + s.durationMinutes;
-  });
-
-  const sortedCourses = Object.entries(courseTimeMap)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 4);
+  const sortedCourses = byCourse.slice(0, 4).map(c => [c.courseName, c.minutes] as [string, number]);
 
   return (
     <div className="space-y-6">
