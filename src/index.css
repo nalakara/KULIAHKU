@@ -1,17 +1,134 @@
 @import "tailwindcss";
 
+@theme {
+  --color-indigo-50: #eefcee;
+  --color-indigo-100: #d2f9d2;
+  --color-indigo-200: #a3f5a3;
+  --color-indigo-300: #5af25a;
+  --color-indigo-400: #00A800;
+  --color-indigo-500: #00A800;
+  --color-indigo-600: #008f00;
+  --color-indigo-700: #007000;
+  --color-indigo-800: #005700;
+  --color-indigo-900: #003d00;
+  --color-indigo-950: #002400;
+}
+
+:root {
+  --color-canvas: #f7f7f7;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f1f1f1;
+  --color-surface-elevated: #ffffff;
+  --color-text-primary: #202124;
+  --color-text-secondary: #5f6368;
+  --color-text-emphasis: #111111;
+  --color-border-subtle: #e5e5e5;
+  --color-border-standard: #d4d4d4;
+  --color-control: #f1f1f1;
+  --color-control-hover: #e7e7e7;
+  --color-brand: #00A800;
+  --color-brand-contrast: #000000;
+}
+
+.dark, [data-theme="dark"] {
+  --color-canvas: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-secondary: #181818;
+  --color-surface-elevated: #262626;
+  --color-text-primary: #e5e6e9;
+  --color-text-secondary: #a3a3a3;
+  --color-text-emphasis: #ffffff;
+  --color-border-subtle: #262626;
+  --color-border-standard: #333333;
+  --color-control: rgb(38, 38, 38);
+  --color-control-hover: #333333;
+  --color-brand: #00A800;
+  --color-brand-contrast: #000000;
+}
+
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
   }
   
   .font-display {
-    font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', ui-sans-serif, sans-serif;
   }
 
   .font-mono {
     font-family: 'JetBrains Mono', monospace;
   }
+}
+
+/* Nalakara Semantic Component Classes */
+.nlk-canvas {
+  background-color: var(--color-canvas);
+}
+
+.nlk-surface {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-subtle);
+}
+
+.nlk-surface-secondary {
+  background-color: var(--color-surface-secondary);
+  border-color: var(--color-border-subtle);
+}
+
+.nlk-surface-elevated {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-border-subtle);
+}
+
+.nlk-border {
+  border-color: var(--color-border-subtle);
+}
+
+.nlk-border-standard {
+  border-color: var(--color-border-standard);
+}
+
+.nlk-text-primary {
+  color: var(--color-text-primary);
+}
+
+.nlk-text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.nlk-text-emphasis {
+  color: var(--color-text-emphasis);
+}
+
+.nlk-control {
+  background-color: var(--color-control);
+  color: var(--color-text-primary);
+}
+.nlk-control:hover {
+  background-color: var(--color-control-hover);
+}
+
+/* Primary Brand Action Button (#00A800 Green) */
+.nlk-btn-primary {
+  background-color: #00A800;
+  color: #ffffff;
+  font-weight: 600;
+}
+.nlk-btn-primary:hover {
+  background-color: #008f00;
+  color: #ffffff;
+}
+
+.nlk-text-brand {
+  color: #00A800;
+}
+
+.nlk-badge-brand {
+  background-color: rgba(0, 168, 0, 0.15);
+  color: #00A800;
+  border: 1px solid rgba(0, 168, 0, 0.3);
 }
 
 /* Custom minimal scrollbar */
@@ -23,9 +140,9 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
+  background: rgba(156, 163, 175, 0.25);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
+  background: rgba(156, 163, 175, 0.45);
 }

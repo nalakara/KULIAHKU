@@ -161,8 +161,13 @@ export default function App() {
 
   useEffect(() => {
     saveSettings(settings);
-    // Ensure dark studio workspace class is active
-    document.documentElement.classList.add('dark');
+    if (settings.darkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
   }, [settings]);
 
   // Initial mount: hydrate from IndexedDB and run migration if needed
@@ -414,16 +419,23 @@ export default function App() {
     setIsTaskModalOpen(true);
   };
 
-  const handleQuickStartTimer = (courseName: string, topic: string) => {
+  // Quick create visual task for a specific course
+  const handleQuickCreateTaskForCourse = (course: CourseSchedule) => {
+    setTaskToEdit(null);
+    setDefaultCourseForTask(course.id);
+    setIsTaskModalOpen(true);
+  };
+
+  const handleQuickStartTimer = (_courseName: string, _topic: string) => {
     setActiveTab('timer');
   };
 
-  const handleNavigateToSchedule = (courseId?: string, day?: string) => {
+  const handleNavigateToSchedule = (_courseId?: string, _day?: string) => {
     setActiveTab('schedule');
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-100 dark:bg-[#0e0f12] dark:text-slate-100 font-sans transition-colors duration-200">
+    <div className="min-h-screen flex nlk-canvas nlk-text-primary font-sans transition-colors duration-200">
       {/* Side Menu / Sidebar with Autohide for Desktop & Mobile */}
       <Sidebar
         activeTab={activeTab}
@@ -468,7 +480,7 @@ export default function App() {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {activeTab === 'schedule' && (
             <ScheduleView
               courses={courses}
@@ -481,18 +493,15 @@ export default function App() {
                 setIsCourseModalOpen(true);
               }}
               onDeleteCourse={handleDeleteCourse}
-              onQuickCreateTaskForCourse={(c) => {
-                setTaskToEdit(null);
-                setDefaultCourseForTask(c.id);
-                setIsTaskModalOpen(true);
-              }}
               onViewCourseRps={handleViewCourseRps}
+              onQuickCreateTaskForCourse={handleQuickCreateTaskForCourse}
             />
           )}
 
           {activeTab === 'tasks' && (
             <VisualTasksView
               tasks={tasks}
+              courses={courses}
               onAddTask={() => {
                 setTaskToEdit(null);
                 setDefaultCourseForTask(undefined);
@@ -558,8 +567,8 @@ export default function App() {
         </main>
 
         {/* Minimalist Footer */}
-        <footer className="border-t border-slate-900 bg-slate-950/80 dark:border-[#1a1b20] py-5 px-4 text-center text-xs text-slate-400">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <footer className="border-t nlk-border nlk-surface py-4 px-4 text-center text-xs nlk-text-secondary">
+          <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>KULIAHKU Progressive Web App • Desain Komunikasi Visual</span>
             <div className="flex items-center gap-4">
               <button

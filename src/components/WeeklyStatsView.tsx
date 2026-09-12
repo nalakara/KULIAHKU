@@ -47,27 +47,27 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
       {/* Header */}
       <div>
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
             Analisis Kemajuan Visual
           </span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-display font-bold text-white mt-1">
+        <h2 className="text-xl sm:text-2xl font-semibold nlk-text-primary tracking-tight mt-1">
           Statistik Mingguan Mahasiswa DKV
         </h2>
-        <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-          Pantau alokasi waktu belajar, rasio penyerahan tugas, dan produktivitas studio Anda secara visual.
+        <p className="text-xs sm:text-sm nlk-text-secondary mt-0.5">
+          Pantau alokasi waktu belajar, rasio penyerahan tugas, dan produktivitas studio Anda secara terukur.
         </p>
       </div>
 
       {/* Overview Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between shadow-sm">
+        <div className="p-4 rounded-lg nlk-surface border nlk-border flex flex-col justify-between shadow-sm">
           <div className="flex items-center justify-between text-indigo-400 mb-2">
-            <span className="text-xs font-semibold text-slate-400">Total Waktu Studio</span>
+            <span className="text-xs font-medium nlk-text-tertiary">Total Waktu Studio</span>
             <Clock className="w-4 h-4" />
           </div>
-          <p className="text-2xl sm:text-3xl font-display font-bold text-white">
-            {totalFocusHours} <span className="text-sm font-normal text-slate-400">Jam</span>
+          <p className="text-2xl sm:text-3xl font-semibold nlk-text-primary">
+            {totalFocusHours} <span className="text-sm font-normal nlk-text-tertiary">Jam</span>
           </p>
           <span className="text-[11px] text-indigo-400 mt-2 flex items-center gap-1">
             <TrendingUp className="w-3 h-3" />
@@ -75,59 +75,59 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between shadow-sm">
-          <div className="flex items-center justify-between text-emerald-400 mb-2">
-            <span className="text-xs font-semibold text-slate-400">Tugas Diselesaikan</span>
+        <div className="p-4 rounded-lg nlk-surface border nlk-border flex flex-col justify-between shadow-sm">
+          <div className="flex items-center justify-between text-emerald-500 mb-2">
+            <span className="text-xs font-medium nlk-text-tertiary">Tugas Diselesaikan</span>
             <CheckCircle2 className="w-4 h-4" />
           </div>
-          <p className="text-2xl sm:text-3xl font-display font-bold text-white">
+          <p className="text-2xl sm:text-3xl font-semibold nlk-text-primary">
             {completedTasks} / {totalTasks}
           </p>
-          <span className="text-[11px] text-emerald-400 mt-2">
+          <span className="text-[11px] text-emerald-500 mt-2">
             {completionPercentage}% Target terpenuhi
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between shadow-sm">
+        <div className="p-4 rounded-lg nlk-surface border nlk-border flex flex-col justify-between shadow-sm">
           <div className="flex items-center justify-between text-pink-400 mb-2">
-            <span className="text-xs font-semibold text-slate-400">Arsip Portofolio</span>
+            <span className="text-xs font-medium nlk-text-tertiary">Arsip Portofolio</span>
             <Sparkles className="w-4 h-4" />
           </div>
-          <p className="text-2xl sm:text-3xl font-display font-bold text-white">
-            {portfolio.length} <span className="text-sm font-normal text-slate-400">Karya</span>
+          <p className="text-2xl sm:text-3xl font-semibold nlk-text-primary">
+            {portfolio.length} <span className="text-sm font-normal nlk-text-tertiary">Karya</span>
           </p>
           <span className="text-[11px] text-pink-400 mt-2">
             Siap kurasi pameran
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between shadow-sm">
-          <div className="flex items-center justify-between text-amber-400 mb-2">
-            <span className="text-xs font-semibold text-slate-400">Skor Fokus Studio</span>
+        <div className="p-4 rounded-lg nlk-surface border nlk-border flex flex-col justify-between shadow-sm">
+          <div className="flex items-center justify-between text-amber-500 mb-2">
+            <span className="text-xs font-medium nlk-text-tertiary">Skor Fokus Studio</span>
             <Award className="w-4 h-4" />
           </div>
-          <p className="text-2xl sm:text-3xl font-display font-bold text-white">
+          <p className="text-2xl sm:text-3xl font-semibold nlk-text-primary">
             94%
           </p>
-          <span className="text-[11px] text-amber-400 mt-2">
+          <span className="text-[11px] text-amber-500 mt-2">
             Konsistensi visual tinggi
           </span>
         </div>
       </div>
 
       {/* Main Bar Chart: Daily Study Hours */}
-      <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-sm">
+      <div className="p-5 rounded-lg nlk-surface border nlk-border shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <h3 className="text-base font-semibold nlk-text-primary flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-indigo-400" />
               Aktivitas Studio 7 Hari Terakhir
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs nlk-text-secondary mt-0.5">
               Grafik durasi jam fokus harian dalam pengerjaan proyek desain & tugas studio.
             </p>
           </div>
-          <span className="text-xs font-mono font-semibold text-indigo-300 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+          <span className="text-xs font-mono font-medium text-indigo-400 nlk-surface-secondary px-2.5 py-1 rounded border nlk-border">
             Rata-rata: {Math.round(totalFocusMinutesWeek / 7)} mnt/hari
           </span>
         </div>
@@ -141,26 +141,26 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
             return (
               <div key={day.date} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
                 {/* Tooltip on hover */}
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-white bg-slate-800 px-2 py-1 rounded shadow border border-slate-700 whitespace-nowrap">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] nlk-text-primary nlk-surface-elevated px-2 py-1 rounded shadow-sm border nlk-border whitespace-nowrap">
                   {day.minutes} menit
                 </div>
 
                 {/* Bar */}
-                <div className="w-full max-w-[42px] bg-slate-800 rounded-t-xl overflow-hidden flex flex-col justify-end h-full">
+                <div className="w-full max-w-[40px] bg-neutral-200 dark:bg-neutral-800 rounded-t overflow-hidden flex flex-col justify-end h-full">
                   <div
                     style={{ height: `${Math.max(8, heightPercent)}%` }}
-                    className={`w-full rounded-t-xl transition-all duration-500 ${
+                    className={`w-full rounded-t transition-all duration-300 ${
                       isToday
-                        ? 'bg-gradient-to-t from-indigo-600 via-pink-500 to-amber-400 shadow-lg shadow-pink-500/20'
+                        ? 'bg-[#00A800]'
                         : day.minutes > 0
-                        ? 'bg-indigo-600 hover:bg-indigo-500'
-                        : 'bg-slate-700/40'
+                        ? 'bg-[#00A800]/80 hover:bg-[#00A800]'
+                        : 'bg-neutral-300 dark:bg-neutral-700/50'
                     }`}
                   />
                 </div>
 
                 {/* Day label */}
-                <span className={`text-xs font-medium ${isToday ? 'text-pink-400 font-bold' : 'text-slate-400'}`}>
+                <span className={`text-xs font-medium ${isToday ? 'text-[#00A800] font-bold' : 'nlk-text-tertiary'}`}>
                   {day.dayLabel}
                 </span>
               </div>
@@ -172,8 +172,8 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
       {/* Distribution by Courses & Deliverables */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Course Time Allocation */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+        <div className="p-5 rounded-lg nlk-surface border nlk-border">
+          <h3 className="text-sm font-semibold nlk-text-primary mb-3 flex items-center gap-2">
             <Layers className="w-4 h-4 text-cyan-400" />
             Alokasi Waktu per Mata Kuliah DKV
           </h3>
@@ -184,10 +184,10 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
               return (
                 <div key={name} className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="font-semibold text-slate-200 truncate">{name}</span>
-                    <span className="font-mono text-slate-400">{mins} mnt ({perc}%)</span>
+                    <span className="font-medium nlk-text-primary truncate">{name}</span>
+                    <span className="font-mono nlk-text-tertiary">{mins} mnt ({perc}%)</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
                     <div
                       style={{ width: `${perc}%` }}
                       className={`h-full ${colors[idx % colors.length]} rounded-full`}
@@ -200,35 +200,35 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
         </div>
 
         {/* Studio Productivity Milestones */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-lg nlk-surface border nlk-border flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+            <h3 className="text-sm font-semibold nlk-text-primary mb-2 flex items-center gap-2">
               <Flame className="w-4 h-4 text-pink-500" />
               Refleksi Produktivitas Kreatif
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Konsistensi pengerjaan tugas studio Anda minggu ini sangat baik. Ritme kerja di malam hari terbantu oleh visual mode gelap minimalis, menjaga kelelahan mata tetap rendah.
+            <p className="text-xs nlk-text-secondary leading-relaxed">
+              Konsistensi pengerjaan tugas studio Anda minggu ini sangat baik. Ritme kerja didukung oleh tipografi terstruktur dan alur kerja DKV yang terpadu.
             </p>
 
-            <div className="mt-4 p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300 space-y-2">
+            <div className="mt-4 p-3 rounded-md nlk-surface-secondary border nlk-border text-xs nlk-text-secondary space-y-2">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Tipografi & Nirmana selesai sebelum deadline</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>5 sesi Deep Studio Pomodoro terselesaikan</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Data tersimpan aman di IndexedDB Lokal</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+          <div className="mt-4 pt-3 border-t nlk-border text-[11px] nlk-text-tertiary flex justify-between">
             <span>Update statistik setiap sesi timer</span>
-            <span className="text-indigo-400 font-semibold">Status: Prima</span>
+            <span className="text-indigo-400 font-medium">Status: Prima</span>
           </div>
         </div>
       </div>

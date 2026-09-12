@@ -26,11 +26,11 @@ export const PWAInstallButton: React.FC = () => {
           const success = await install();
           if (success) setJustInstalled(true);
         }}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-sm hover:from-indigo-600 hover:to-pink-600 transition-all active:scale-95"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold nlk-btn-primary shadow-sm transition-all active:scale-95"
         title="Pasang aplikasi di laptop atau HP untuk akses offline cepat"
       >
-        <Download className="w-3.5 h-3.5" />
-        {justInstalled ? 'Terpasang!' : 'Pasang Aplikasi PWA'}
+        <Download className="w-3.5 h-3.5 text-black" />
+        <span>{justInstalled ? 'Terpasang!' : 'Pasang Aplikasi PWA'}</span>
       </button>
     );
   }

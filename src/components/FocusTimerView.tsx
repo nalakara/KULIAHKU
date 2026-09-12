@@ -153,13 +153,13 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header Info */}
       <div className="text-center">
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+        <span className="px-2.5 py-0.5 rounded text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
           Studio Focus & Deep Work Timer
         </span>
-        <h2 className="text-2xl sm:text-3xl font-display font-bold text-white mt-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold nlk-text-primary tracking-tight mt-2">
           Pengatur Waktu Belajar & Eksplorasi
         </h2>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm nlk-text-secondary mt-1 max-w-md mx-auto">
           Ciptakan kondisi flow saat membuat sketsa, rendering 3D, atau menyusun layout publikasi.
         </p>
       </div>
@@ -172,39 +172,32 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
             <button
               key={preset.mode}
               onClick={() => setSelectedPreset(preset.mode)}
-              className={`p-3 rounded-2xl border text-left transition-all ${
+              className={`p-3 rounded-lg border text-left transition-all ${
                 isSelected
-                  ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
-                  : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                  ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-400 shadow-sm'
+                  : 'nlk-surface nlk-border nlk-text-secondary hover:nlk-text-primary hover:nlk-surface-secondary'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200">{preset.name}</span>
-                {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />}
+                <span className="text-xs font-semibold nlk-text-primary">{preset.name}</span>
+                {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
               </div>
-              <p className="text-[11px] text-slate-400 mt-1 line-clamp-1">{preset.desc}</p>
+              <p className="text-[11px] nlk-text-tertiary mt-1 line-clamp-1">{preset.desc}</p>
             </button>
           );
         })}
       </div>
 
       {/* Main Aesthetic Timer Visual Dial */}
-      <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-8 sm:p-12 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
-        {/* Ambient background glow matching focus/break state */}
-        <div 
-          className={`absolute w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none transition-all duration-700 ${
-            isBreak ? 'bg-emerald-500' : isActive ? 'bg-indigo-500 animate-pulse' : 'bg-pink-500/50'
-          }`} 
-        />
-
+      <div className="rounded-lg nlk-surface border nlk-border p-8 sm:p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
         {/* State Pill */}
         <div className="mb-6 flex items-center gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
+          <span className={`px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${
             isBreak 
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
               : isActive
-              ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-              : 'bg-slate-800 text-slate-400 border border-slate-700'
+              ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30'
+              : 'nlk-surface-secondary nlk-text-tertiary border nlk-border'
           }`}>
             {selectedPreset === 'stopwatch' 
               ? (isActive ? 'Creative Flow Aktif' : 'Siap Mulai')
@@ -213,10 +206,10 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
 
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-md nlk-text-tertiary hover:nlk-text-primary hover:nlk-surface-secondary transition"
             title={soundEnabled ? 'Suara Bell Aktif' : 'Mute Bell'}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-indigo-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-indigo-400" /> : <VolumeX className="w-4 h-4 text-neutral-400" />}
           </button>
         </div>
 
@@ -228,8 +221,8 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
               cx="120"
               cy="120"
               r="100"
-              className="stroke-slate-800"
-              strokeWidth="10"
+              className="stroke-neutral-200 dark:stroke-neutral-800"
+              strokeWidth="8"
               fill="transparent"
             />
             {/* Active progress circle */}
@@ -237,8 +230,8 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
               cx="120"
               cy="120"
               r="100"
-              stroke={isBreak ? '#10B981' : '#6366F1'}
-              strokeWidth="10"
+              stroke={isBreak ? '#10B981' : '#00A800'}
+              strokeWidth="8"
               strokeLinecap="round"
               fill="transparent"
               strokeDasharray={2 * Math.PI * 100}
@@ -249,12 +242,12 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
 
           {/* Time text centered */}
           <div className="absolute flex flex-col items-center justify-center text-center">
-            <span className="font-mono text-5xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            <span className="font-mono text-5xl sm:text-6xl font-semibold tracking-tight nlk-text-primary">
               {selectedPreset === 'stopwatch' 
                 ? formatTime(stopwatchSeconds)
                 : formatTime(secondsRemaining)}
             </span>
-            <span className="text-xs text-slate-400 mt-2 font-medium">
+            <span className="text-xs nlk-text-secondary mt-2 font-medium">
               {isBreak ? 'Tenggang Santai' : currentPreset.name}
             </span>
           </div>
@@ -262,13 +255,13 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
 
         {/* Task association selector */}
         <div className="mt-8 w-full max-w-sm">
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5 text-center">
+          <label className="text-xs font-medium nlk-text-secondary block mb-1.5 text-center">
             Tautkan ke Tugas Studio / Proyek:
           </label>
           <select
             value={selectedTaskId}
             onChange={(e) => setSelectedTaskId(e.target.value)}
-            className="w-full rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-200 px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+            className="w-full rounded-md nlk-surface-secondary border nlk-border text-xs nlk-text-primary px-3 py-2 focus:outline-none focus:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/30"
           >
             <option value="">-- Eksplorasi Desain Bebas --</option>
             {tasks.map(t => (
@@ -280,24 +273,24 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
         </div>
 
         {/* Control Buttons */}
-        <div className="mt-6 flex items-center gap-4">
+        <div className="mt-6 flex items-center gap-3">
           <button
             id="timer-play-toggle-btn"
             onClick={() => setIsActive(!isActive)}
-            className={`px-8 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-2.5 shadow-xl transition-all active:scale-95 ${
+            className={`px-7 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] ${
               isActive
-                ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/30'
-                : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30'
+                ? 'bg-amber-600 hover:bg-amber-500 text-white'
+                : 'nlk-btn-primary'
             }`}
           >
             {isActive ? (
               <>
-                <Pause className="w-5 h-5" />
+                <Pause className="w-4 h-4" />
                 <span>Jeda</span>
               </>
             ) : (
               <>
-                <Play className="w-5 h-5 fill-current" />
+                <Play className="w-4 h-4 fill-current text-white" />
                 <span>Mulai Fokus</span>
               </>
             )}
@@ -306,7 +299,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
           {selectedPreset === 'stopwatch' ? (
             <button
               onClick={handleStopwatchSave}
-              className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+              className="p-2.5 rounded-lg nlk-surface-secondary hover:nlk-surface-elevated text-slate-300 border nlk-border transition"
               title="Simpan durasi sesi flow"
             >
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
@@ -318,7 +311,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
                 setIsBreak(false);
                 setSecondsRemaining(currentPreset.focusMinutes * 60);
               }}
-              className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+              className="p-2.5 rounded-lg nlk-surface-secondary hover:nlk-surface-elevated nlk-text-secondary border nlk-border transition"
               title="Reset Timer"
             >
               <RotateCcw className="w-5 h-5" />
@@ -328,14 +321,14 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
       </div>
 
       {/* Recent Focus History */}
-      <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+      <div className="rounded-lg nlk-surface border nlk-border p-5">
+        <h3 className="text-sm font-semibold nlk-text-primary flex items-center gap-2 mb-3">
           <Flame className="w-4 h-4 text-pink-500" />
           Riwayat Sesi Fokus & Studio Terbaru
         </h3>
 
         {recentSessions.length === 0 ? (
-          <p className="text-xs text-slate-400 py-3 text-center">
+          <p className="text-xs nlk-text-secondary py-3 text-center">
             Belum ada sesi fokus yang tercatat. Mulai sesi pertama Anda untuk memantau kemajuan mingguan!
           </p>
         ) : (
@@ -343,19 +336,19 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
             {recentSessions.slice(0, 5).map(sess => (
               <div
                 key={sess.id}
-                className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between gap-3 text-xs"
+                className="p-3 rounded-md nlk-surface-secondary border nlk-border flex items-center justify-between gap-3 text-xs"
               >
                 <div>
-                  <p className="font-bold text-white">{sess.taskTitle || 'Eksplorasi Studio'}</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="font-semibold nlk-text-primary">{sess.taskTitle || 'Eksplorasi Studio'}</p>
+                  <p className="text-[11px] nlk-text-secondary mt-0.5">
                     {sess.courseName} • {sess.notes}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-xs font-bold text-indigo-400">
+                  <span className="font-mono text-xs font-semibold text-indigo-400">
                     +{sess.durationMinutes} menit
                   </span>
-                  <span className="block text-[10px] text-slate-400 mt-0.5">
+                  <span className="block text-[10px] nlk-text-tertiary mt-0.5">
                     {sess.dateString}
                   </span>
                 </div>
