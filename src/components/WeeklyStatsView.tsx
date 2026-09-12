@@ -221,7 +221,7 @@ export const WeeklyStatsView: React.FC<WeeklyStatsViewProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Data tersinkron otomatis ke Google Drive Cloud</span>
+                <span>Data tersimpan aman di IndexedDB Lokal</span>
               </div>
             </div>
           </div>

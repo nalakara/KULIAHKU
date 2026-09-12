@@ -20,7 +20,7 @@ import confetti from 'canvas-confetti';
 import { VisualTask, VisualStage, PriorityLevel, DeliverableType } from '../types';
 import { VISUAL_STAGES as STAGES, calculateDeadlineUrgency, filterTasks } from '../domain/tasks';
 import { playChime } from '../utils/audioAlert';
-import { AssetImage } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface VisualTasksViewProps {
   tasks: VisualTask[];

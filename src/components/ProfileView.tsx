@@ -41,7 +41,7 @@ import {
 } from '../types';
 import { calculateTotalSks } from '../domain/academic';
 import { calculateTaskStatistics } from '../domain/tasks';
-import { AssetImage } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 import { EditProfileModal } from './EditProfileModal';
 
 interface ProfileViewProps {

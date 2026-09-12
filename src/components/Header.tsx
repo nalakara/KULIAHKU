@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 import { UserSettings, NotificationItem, UserProfile } from '../types';
-import { AssetImage } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface HeaderProps {
   settings: UserSettings;

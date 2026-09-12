@@ -48,6 +48,7 @@ import {
   restoreBackupData,
   AppDataBackup,
 } from './utils/storage';
+import { pruneOrphanedAssets } from './infrastructure/storage/assetStore';
 
 import { playChime } from './utils/audioAlert';
 import { createTaskFromRPSMeeting, taskToPortfolioDraft } from './domain/tasks';
@@ -103,7 +104,7 @@ export default function App() {
     portfolio: 'Portofolio',
     stats: 'Statistik',
     profile: 'Profil & RPS',
-    settings: 'Sync & Opsi',
+    settings: 'Cadangan & Opsi',
   };
 
   // In-App Notification Feed
@@ -279,17 +280,24 @@ export default function App() {
   const handleSaveTask = (taskData: VisualTask) => {
     setTasks(prev => {
       const idx = prev.findIndex(t => t.id === taskData.id);
+      let next: VisualTask[];
       if (idx >= 0) {
-        const next = [...prev];
+        next = [...prev];
         next[idx] = taskData;
-        return next;
+      } else {
+        next = [taskData, ...prev];
       }
-      return [taskData, ...prev];
+      pruneOrphanedAssets(next, portfolio, profile);
+      return next;
     });
   };
 
   const handleDeleteTask = (id: string) => {
-    setTasks(prev => prev.filter(t => t.id !== id));
+    setTasks(prev => {
+      const next = prev.filter(t => t.id !== id);
+      pruneOrphanedAssets(next, portfolio, profile);
+      return next;
+    });
   };
 
   const handleToggleTaskComplete = (id: string) => {
@@ -336,17 +344,24 @@ export default function App() {
   const handleSavePortfolioItem = (item: PortfolioItem) => {
     setPortfolio(prev => {
       const idx = prev.findIndex(p => p.id === item.id);
+      let next: PortfolioItem[];
       if (idx >= 0) {
-        const next = [...prev];
+        next = [...prev];
         next[idx] = item;
-        return next;
+      } else {
+        next = [item, ...prev];
       }
-      return [item, ...prev];
+      pruneOrphanedAssets(tasks, next, profile);
+      return next;
     });
   };
 
   const handleDeletePortfolioItem = (id: string) => {
-    setPortfolio(prev => prev.filter(p => p.id !== id));
+    setPortfolio(prev => {
+      const next = prev.filter(p => p.id !== id);
+      pruneOrphanedAssets(tasks, next, profile);
+      return next;
+    });
   };
 
   const handleToggleFeatured = (id: string) => {
@@ -561,7 +576,7 @@ export default function App() {
                 onClick={() => setIsSyncModalOpen(true)}
                 className="hover:text-indigo-400 transition"
               >
-                Google Drive Cloud Sync
+                Cadangan Data Mandiri
               </button>
             </div>
           </div>

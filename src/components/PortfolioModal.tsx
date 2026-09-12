@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Image as ImageIcon, Upload, Tag } from 'lucide-react';
 import { PortfolioItem, DeliverableType } from '../types';
-import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
+import { saveAssetBlob } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface PortfolioModalProps {
   isOpen: boolean;

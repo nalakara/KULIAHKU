@@ -8,13 +8,14 @@ export const DAYS_OF_WEEK: DayOfWeek[] = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'J
 export function getTodayName(date: Date = new Date()): DayOfWeek {
   const dayIndex = date.getDay(); // 0: Sun, 1: Mon, ... 6: Sat
   switch (dayIndex) {
+    case 0: return 'Minggu';
     case 1: return 'Senin';
     case 2: return 'Selasa';
     case 3: return 'Rabu';
     case 4: return 'Kamis';
     case 5: return 'Jumat';
     case 6: return 'Sabtu';
-    default: return 'Senin'; // Fallback on Sunday to start of academic week
+    default: return 'Senin';
   }
 }
 

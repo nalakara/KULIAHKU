@@ -1,4 +1,4 @@
-export type DayOfWeek = 'Senin' | 'Selasa' | 'Rabu' | 'Kamis' | 'Jumat' | 'Sabtu';
+export type DayOfWeek = 'Senin' | 'Selasa' | 'Rabu' | 'Kamis' | 'Jumat' | 'Sabtu' | 'Minggu';
 
 export type StudioType = 
   | 'Studio Desain'
@@ -103,8 +103,8 @@ export interface NotificationItem {
 
 export interface UserSettings {
   darkMode: boolean;
-  autoCloudSync: boolean;
-  googleDriveConnected: boolean;
+  autoCloudSync?: boolean;
+  googleDriveConnected?: boolean;
   googleAccountEmail?: string;
   lastCloudSync?: string;
   soundAlerts: boolean;

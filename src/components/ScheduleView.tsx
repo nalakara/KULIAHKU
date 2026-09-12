@@ -34,7 +34,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   onViewCourseRps,
 }) => {
   const todayName = getTodayName();
-  const [selectedDay, setSelectedDay] = useState<DayOfWeek | 'Semua'>(todayName);
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek | 'Semua'>(
+    todayName === 'Minggu' ? 'Semua' : todayName
+  );
 
   const filteredCourses = filterCoursesByDay(courses, selectedDay);
   const todaysCourses = getTodaysCourses(courses, todayName);
@@ -49,7 +51,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                Hari ini: {todayName}
+                Hari ini: {todayName === 'Minggu' ? 'Minggu (Libur Studio)' : todayName}
               </span>
               <span className="text-xs text-slate-400">
                 Semester Genap 2026

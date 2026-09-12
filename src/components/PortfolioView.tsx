@@ -15,7 +15,7 @@ import {
 import { PortfolioItem, DeliverableType } from '../types';
 import { filterPortfolio } from '../domain/portfolio';
 import { DELIVERABLES } from '../domain/tasks';
-import { AssetImage } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface PortfolioViewProps {
   items: PortfolioItem[];

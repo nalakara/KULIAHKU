@@ -73,12 +73,12 @@ export const DevelopmentEstimationModal: React.FC<DevelopmentEstimationModalProp
       ],
     },
     {
-      phase: 'Fase 5: Sinkronisasi Awan & Pengingat Notifikasi',
+      phase: 'Fase 5: Cadangan Data & Pengingat Notifikasi',
       duration: '1 Minggu (30-40 Jam)',
       icon: Cloud,
       color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
       items: [
-        'Mekanisme sinkronisasi cloud Google Drive otomatis dan pencadangan berkas JSON mandiri',
+        'Pencadangan berkas JSON mandiri dan penyimpanan lokal IndexedDB',
         'Integrasi Web Notification API untuk pengingat kelas kuliah & deadline tugas dengan interval kustom',
         'Efek suara bell santai dan peringatan berbasis waktu real-time',
         'Optimasi performa bundle (<150KB) untuk memastikan aplikasi tetap cepat di laptop/HP',
@@ -136,7 +136,7 @@ export const DevelopmentEstimationModal: React.FC<DevelopmentEstimationModalProp
                   </span>
                 </p>
                 <p className="text-xs text-slate-300 mt-1">
-                  Mencakup riset UX, PWA compliance, visual task board, timer Pomodoro, galeri portofolio, Google Drive sync, dan testing performa ringan.
+                  Mencakup riset UX, PWA compliance, visual task board, timer Pomodoro, galeri portofolio, backup JSON, dan testing performa ringan.
                 </p>
               </div>
 

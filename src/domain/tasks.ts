@@ -65,23 +65,36 @@ export function calculateDeadlineUrgency(
   }
 
   const deadlineMs = new Date(deadlineStr).getTime();
+  if (isNaN(deadlineMs)) {
+    return {
+      text: 'Tanggal Belum Diatur',
+      color: 'text-slate-400 bg-slate-800 border-slate-700',
+      isUrgent: false,
+      isOverdue: false,
+      hoursRemaining: 0,
+    };
+  }
+
   const diffMs = deadlineMs - nowTimestamp;
-  const hoursRemaining = Math.round(diffMs / (1000 * 60 * 60));
-  const daysRemaining = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  const ONE_HOUR_MS = 60 * 60 * 1000;
+  const ONE_DAY_MS = 24 * ONE_HOUR_MS;
 
   if (diffMs < 0) {
+    const hoursOverdue = Math.round(diffMs / ONE_HOUR_MS);
     return {
       text: 'Melewati Tenggat!',
       color: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
       isUrgent: true,
       isOverdue: true,
-      hoursRemaining,
+      hoursRemaining: hoursOverdue,
     };
   }
 
-  if (hoursRemaining < 24) {
+  // 0 < remaining time <= 24 hours (exact millisecond boundary)
+  if (diffMs <= ONE_DAY_MS) {
+    const hoursRemaining = Math.max(1, Math.ceil(diffMs / ONE_HOUR_MS));
     return {
-      text: `Sisa ${Math.max(1, hoursRemaining)} Jam!`,
+      text: `Sisa ${hoursRemaining} Jam!`,
       color: 'text-rose-400 bg-rose-500/10 border-rose-500/30 animate-pulse',
       isUrgent: true,
       isOverdue: false,
@@ -89,7 +102,10 @@ export function calculateDeadlineUrgency(
     };
   }
 
-  if (daysRemaining <= 3) {
+  const daysRemaining = Math.ceil(diffMs / ONE_DAY_MS);
+  const hoursRemaining = Math.round(diffMs / ONE_HOUR_MS);
+
+  if (diffMs <= 3 * ONE_DAY_MS) {
     return {
       text: `${daysRemaining} Hari Lagi`,
       color: 'text-amber-400 bg-amber-500/10 border-amber-500/30',

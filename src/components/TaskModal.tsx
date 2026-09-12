@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2, Image as ImageIcon, Palette, Calendar, Clock, Upload } from 'lucide-react';
 import { VisualTask, VisualStage, PriorityLevel, DeliverableType, CourseSchedule } from '../types';
-import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
+import { saveAssetBlob } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface TaskModalProps {
   isOpen: boolean;

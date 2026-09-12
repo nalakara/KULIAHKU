@@ -17,7 +17,7 @@ import {
   INITIAL_RPS,
 } from '../../data/initialData';
 import { STORES, idbSet } from './idb';
-import { getAllAssets, restoreAsset, blobToDataUrl, dataUrlToBlob } from './assetStore';
+import { getAllAssets, restoreAsset, blobToDataUrl, dataUrlToBlob, collectReferencedAssetIds } from './assetStore';
 
 const LIGHT_CACHE_KEYS = {
   COURSES: 'kuliahku_c_courses',
@@ -130,11 +130,16 @@ export async function exportBackupData(
   profile?: UserProfile,
   rps?: CourseRPS[]
 ): Promise<AppDataBackup> {
-  // Collect and serialize all stored image assets
+  // Collect active referenced asset IDs to filter out orphaned historical assets
+  const activeIds = collectReferencedAssetIds(tasks, portfolio, profile);
   const storedAssets = await getAllAssets().catch(() => []);
   const serializedAssets: SerializedAsset[] = [];
 
   for (const a of storedAssets) {
+    // Only bundle assets that are actively referenced
+    if (!activeIds.has(a.id)) {
+      continue;
+    }
     try {
       const dataUrl = await blobToDataUrl(a.blob);
       serializedAssets.push({

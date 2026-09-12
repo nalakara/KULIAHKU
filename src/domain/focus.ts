@@ -56,6 +56,16 @@ export function formatTimerDisplay(totalSeconds: number): string {
 }
 
 /**
+ * Format a Date object into YYYY-MM-DD using the local calendar (not UTC)
+ */
+export function formatLocalDateString(date: Date = new Date()): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/**
  * Calculate weekly focus metrics, daily charts, and studio consistency
  */
 export function calculateWeeklyFocusStats(
@@ -73,7 +83,7 @@ export function calculateWeeklyFocusStats(
   for (let i = 6; i >= 0; i--) {
     const d = new Date(referenceDate);
     d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
+    const dateStr = formatLocalDateString(d);
     const label = dayNamesIndo[d.getDay()];
     past7Days.push({ dateStr, label, minutes: 0 });
   }

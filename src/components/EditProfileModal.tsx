@@ -16,7 +16,8 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { UserProfile } from '../types';
-import { saveAssetBlob, AssetImage } from '../infrastructure/storage/assetStore';
+import { saveAssetBlob } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface EditProfileModalProps {
   isOpen: boolean;

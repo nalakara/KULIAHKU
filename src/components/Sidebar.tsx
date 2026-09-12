@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { ActiveTab } from './Navigation';
 import { UserProfile, UserSettings } from '../types';
-import { AssetImage } from '../infrastructure/storage/assetStore';
+import { AssetImage } from './AssetImage';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -96,8 +96,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'settings',
-      label: 'Sync & Opsi',
-      description: 'Cadangan Awan Google Drive',
+      label: 'Cadangan & Opsi',
+      description: 'Cadangan Data & Pengingat',
       icon: Settings2,
     },
   ];

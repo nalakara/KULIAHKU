@@ -175,15 +175,75 @@ export function useAssetUrl(assetKeyOrUrl?: string): string {
   return resolved;
 }
 
+import { VisualTask, PortfolioItem, UserProfile } from '../../types';
+export { AssetImage } from '../../components/AssetImage';
+
 /**
- * Drop-in image replacement that automatically handles IndexedDB Blob assets and external URLs
+ * Collect all asset IDs currently referenced by active tasks, portfolio items, and user profile.
+ * Pure function, completely safe and idempotent.
  */
-export const AssetImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement> & { src?: string }> = ({
-  src,
-  alt = '',
-  ...props
-}) => {
-  const resolvedUrl = useAssetUrl(src);
-  if (!resolvedUrl) return null;
-  return React.createElement('img', { src: resolvedUrl, alt, ...props });
-};
+export function collectReferencedAssetIds(
+  tasks: VisualTask[] = [],
+  portfolio: PortfolioItem[] = [],
+  profile?: UserProfile
+): Set<string> {
+  const referenced = new Set<string>();
+
+  const checkAndAdd = (val?: string) => {
+    if (!val) return;
+    if (val.startsWith('asset:') || val.startsWith('asset_')) {
+      referenced.add(normalizeAssetId(val));
+    }
+  };
+
+  // 1. Scan tasks
+  tasks.forEach(t => {
+    if (Array.isArray(t.moodboardImages)) {
+      t.moodboardImages.forEach(checkAndAdd);
+    }
+  });
+
+  // 2. Scan portfolio
+  portfolio.forEach(p => {
+    checkAndAdd(p.imageUrl);
+    if (Array.isArray(p.additionalImages)) {
+      p.additionalImages.forEach(checkAndAdd);
+    }
+  });
+
+  // 3. Scan profile avatar
+  if (profile?.avatarUrl) {
+    checkAndAdd(profile.avatarUrl);
+  }
+
+  return referenced;
+}
+
+/**
+ * Safely removes orphaned image blobs from IndexedDB.
+ * Guard: Only deletes assets that are strictly unreferenced across all tasks, portfolio, and profile.
+ * Never deletes any asset that is referenced by even a single active record.
+ */
+export async function pruneOrphanedAssets(
+  tasks: VisualTask[],
+  portfolio: PortfolioItem[],
+  profile?: UserProfile
+): Promise<number> {
+  try {
+    const activeIds = collectReferencedAssetIds(tasks, portfolio, profile);
+    const allAssets = await getAllAssets().catch(() => []);
+
+    let prunedCount = 0;
+    for (const asset of allAssets) {
+      if (!activeIds.has(asset.id)) {
+        await deleteAssetBlob(asset.id);
+        prunedCount++;
+      }
+    }
+    return prunedCount;
+  } catch (err) {
+    console.warn('Asset pruning notice:', err);
+    return 0;
+  }
+}
+

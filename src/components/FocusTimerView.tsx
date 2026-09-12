@@ -14,7 +14,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { VisualTask, StudySession, TimerMode } from '../types';
-import { TIMER_PRESETS } from '../domain/focus';
+import { TIMER_PRESETS, formatLocalDateString } from '../domain/focus';
 import { playChime } from '../utils/audioAlert';
 
 interface FocusTimerViewProps {
@@ -100,7 +100,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
         durationMinutes: currentPreset.focusMinutes,
         mode: currentPreset.mode,
         timestamp: new Date().toISOString(),
-        dateString: new Date().toISOString().split('T')[0],
+        dateString: formatLocalDateString(new Date()),
         notes: sessionNotes || 'Sesi fokus visual selesai.',
       });
 
@@ -129,7 +129,7 @@ export const FocusTimerView: React.FC<FocusTimerViewProps> = ({
       durationMinutes: minutes,
       mode: 'stopwatch',
       timestamp: new Date().toISOString(),
-      dateString: new Date().toISOString().split('T')[0],
+      dateString: formatLocalDateString(new Date()),
       notes: sessionNotes || 'Creative flow session selesai.',
     });
     setIsActive(false);
