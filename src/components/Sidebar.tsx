@@ -148,26 +148,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Top Branding & Collapse Controls */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800/90 dark:border-[#22242a] flex-shrink-0">
-          {/* Logo Brand */}
-          <div className={`flex items-center gap-3 overflow-hidden ${isCollapsedDesktop ? 'lg:justify-center lg:w-full' : ''}`}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-pink-500 to-amber-400 p-[2px] shadow-sm flex-shrink-0 flex items-center justify-center">
-              <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-white">
-                <Palette className="w-5 h-5 text-indigo-400" />
-              </div>
+          {/* Studio Workspace / Navigation Header */}
+          <div className={`flex items-center gap-2.5 overflow-hidden ${isCollapsedDesktop ? 'lg:justify-center lg:w-full' : ''}`}>
+            <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0">
+              <Palette className="w-4 h-4" />
             </div>
 
-            {/* Brand Title (hidden when desktop collapsed) */}
+            {/* Area Label (hidden when desktop collapsed) */}
             <div className={`transition-opacity duration-200 ${isCollapsedDesktop ? 'lg:hidden' : 'block'} min-w-0`}>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-bold text-base tracking-tight text-white truncate">
-                  KULIAHKU
-                </span>
-                <span className="px-1.5 py-0.5 text-[9px] font-semibold tracking-wider uppercase rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex-shrink-0">
-                  DKV
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-400 truncate">
-                Creative Studio Workspace
+              <span className="text-xs font-semibold text-slate-300 tracking-wide block truncate uppercase">
+                Studio Workspace
+              </span>
+              <p className="text-[10px] text-slate-500 truncate">
+                Desain Komunikasi Visual
               </p>
             </div>
           </div>
