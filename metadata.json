@@ -1,6 +1,4 @@
 {
   "name": "KULIAHKU",
-  "description": "Aplikasi PWA pencatat jadwal kuliah, pengingat tugas visual, pengatur waktu belajar, dan portofolio kreatif mahasiswa DKV.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "Aplikasi PWA pencatat jadwal kuliah, pengingat tugas visual, pengatur waktu belajar, dan portofolio kreatif mahasiswa DKV."
 }
